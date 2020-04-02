@@ -1,0 +1,20 @@
+// mySupervisor
+digraph {
+	A [label=A shape=circle]
+	B [label=B shape=circle]
+	C [label=C shape=circle]
+	D [label=D shape=circle]
+	E [label=E shape=circle]
+	A -> A [label=t2]
+	A -> B [label=t1]
+	A -> C [label=t3]
+	B -> C [label="t3 "]
+	B -> D [label=t5]
+	C -> B [label=t4]
+	C -> C [label=t5]
+	D -> A [label=t6]
+	D -> D [label=t8]
+	D -> E [label=t7]
+	E -> B [label=t1]
+	E -> D [label=t8]
+}
