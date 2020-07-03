@@ -1,0 +1,10 @@
+// Battery Monitor
+digraph {
+	BAT_OK [label=BAT_OK shape=circle]
+	CRITICAL [label=CRITICAL shape=circle]
+	LOW [label=LOW shape=circle]
+	BAT_OK -> LOW [label=bat_L]
+	CRITICAL -> LOW [label=bat_L]
+	LOW -> CRITICAL [label=bat_LL]
+	LOW -> BAT_OK [label=bat_OK]
+}

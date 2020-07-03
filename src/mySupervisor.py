@@ -1,23 +1,28 @@
+import time
+from lib.Automaton import Automaton
+from lib.StateMachine import StateMachine
+from EVENTS import *
 
-from SCT import SupBuilder
+# Create and Start the State Machine
+G1 = Automaton('Battery Monitor')
+G1.read_xml('battery_monitor.xml')
+SM = StateMachine(G1)
+SM.start()
 
-sup1 = SupBuilder('mySupervisor')
-# sup1.insert_state('A')
-# sup1.insert_state('B')
-# sup1.insert_state('C')
-# sup1.insert_state('D')
-# sup1.insert_state('E')
-# sup1.insert_transition('t1','A','B')
-# sup1.insert_transition('t2','A','D')
-# sup1.insert_transition('t3','B','A')
-# sup1.insert_transition('t4','B','C')
-# sup1.insert_transition('t5','C','E')
-# sup1.insert_transition('t1','D','D')
-# sup1.insert_transition('t4','D','E')
-# sup1.insert_transition('t3','E','A')
-# sup1.insert_transition('t2','E','B')
-sup1.read_csv('first.csv')
+# The State Machine must be fully started before events occur
+time.sleep(2)
 
-sup1.show_supervisor()
+# Call event execution
+bat_OK.call()
 
-sup1.show_states()
+bat_L.call()
+bat_OK.call()
+bat_L.call()
+bat_OK.call()
+bat_L.call()
+bat_OK.call()
+
+# while True:
+    # e = input("Which is the event?\nEvent: ")
+    # bat_L()
+    # trigger_event(e)
