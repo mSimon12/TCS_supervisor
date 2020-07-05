@@ -2,8 +2,8 @@ import pandas as pd
 from threading import Thread
 
 from lib.Automaton import Automaton
-from EVENTS import *
-from STATES import *
+from handlers.EVENTS import *
+from handlers.STATES import *
 
 ######################################################################################################### 
 class StateMachine(Thread):
@@ -12,23 +12,21 @@ class StateMachine(Thread):
             aut_name = 'Name for your supervisor automata'
     '''
     def __init__(self, automaton):
-        Thread.__init__(self)                                                                   #  Initialize the thread
-        self.__name = automaton.get_name()                                                      # Name of the StateMachine
+        Thread.__init__(self)                                                                   # Initialize the thread
+        self.__name = automaton.get_name().replace(" ","_")                                     # Name of the StateMachine
         self.__SM = automaton                                                                   # Use the automaton as SM
 
     def run(self):
-
         states = self.__SM.get_states()                                                         # Get the states of the Automaton
         alpha = self.__SM.get_alphabet()                                                        # Get the events of the Automaton
         trans = self.__SM.get_transitions()                                                     # Get the alphabet of the Automaton
         current_state = states.loc[states['initial'] == True].index[0]                          # Get initial state
 
+        # Call execution of the current node
+        eval(self.__name + "." + current_state)()
+
         # Loop to control the State Machine
         while True:
-
-            # Call execution of the current node
-            eval(current_state)()
-
             # Enable and disable events
             for e in alpha:
                 if trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty:
@@ -63,10 +61,11 @@ class StateMachine(Thread):
                     print("ALERT!!!!\nThis transition should not have occured!")
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
-                    print("New state:  ", current_state)
+                    print("\nNew state:  ", current_state)
+                    # Call execution of the current node
+                    eval(self.__name + "." + current_state)()
             else:
                 print("The event '",event,"' does not exist on this SM!")
             
             # Release access to the event section
             g_var.req_SM_update.release()                       
-

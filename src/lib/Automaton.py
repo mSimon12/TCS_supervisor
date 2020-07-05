@@ -1,10 +1,12 @@
 
 import os
+import os
+import errno
+
 import pandas as pd
 from tabulate import tabulate
 from graphviz import Digraph
 import untangle as ut 
-
 
 ######################################################################################################### 
 class Automaton(object):
@@ -18,6 +20,7 @@ class Automaton(object):
         self.__events = pd.DataFrame(columns=['event_id','controllable','transitions'])         # DataFrame containing events info
         self.__transitions = pd.DataFrame(columns=['st_node','end_node','event'])               # DataFrame containing transitions
         self.__alphabet = set()                                                                 # Alphabet set
+
 
     def show_automaton(self):
         '''
@@ -40,7 +43,7 @@ class Automaton(object):
         #             separetor = ','
         #             graph.edge(s_from, s_to, separetor.join(transitions['transition'].values))
         
-        graph.view(filename=self.__name,directory='Automaton')      #Save Automaton as pdf file
+        graph.view(filename=self.__name,directory='output')      #Save Automaton as pdf file
 
 
     def read_xml(self,file):
@@ -105,23 +108,7 @@ class Automaton(object):
 
             self.insert_transition(source, dest, event)     #Insert the transition 
 
-
-    def read_csv(self, file):
-        '''
-            Create the supervisor from a csv file
-        '''
-        source_file = pd.read_csv(file)
-        pass
-
-
-    def read_txt(self, file, directory=None):
-        '''
-            Create the supervisor from a txt file
-        '''
-        pass
-
-#########################################################################################################    
-    #----- GET methods:
+#####----- GET methods: ------#####################################################################################    
     def get_name(self):
         return self.__name
 
@@ -137,9 +124,7 @@ class Automaton(object):
     def get_transitions(self):
         return self.__transitions
 
-
-#########################################################################################################    
-    #----- STATES methods:
+#####----- STATES methods: -----###################################################################################    
     def show_states(self):
         '''
             Show the nodes that belong to the Supervisor.
@@ -195,14 +180,11 @@ class Automaton(object):
         else:
             print("Error: Inexistent node!")
 
-#########################################################################################################
-    #----- EVENTS methods:  
-    
+#### #----- EVENTS methods: -----###################################################################################
     def show_events(self):
         '''
             Show the events that belong to the Supervisor.
         '''
-       
         pdtabulate= lambda df:tabulate(df,headers='keys')
         print("\nEVENTS:")
         print(pdtabulate(self.__events))
@@ -232,9 +214,7 @@ class Automaton(object):
         '''
         pass
 
-
-#########################################################################################################    
-    #----- TRANSITION methods:
+######----- TRANSITION methods: ------##############################################################################    
     def show_transitions(self):
         '''
             Show the nodes that belong to the Supervisor.
@@ -284,14 +264,21 @@ class Automaton(object):
         else:
             print("Error: Inexistent node!")
 
-#########################################################################################################    
-    #----- HANDLERS generation methods:
+#####----- HANDLERS generation methods: ------######################################################################    
     def gen_events_calls(self):
         '''
             Generate a file containing calls for the execution of the events 
             present on this Automaton
         '''
-        events_file = open("EVENTS.py", "a+")                           # Open the file with the events handlers
+        filename = "handlers/EVENTS.py"
+        if not os.path.exists(os.path.dirname(filename)):
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+
+        events_file = open(filename, "a+")                           # Open the file with the events handlers
         events_file.seek(0, os.SEEK_SET)                         # Move the cursor to first line
         content = events_file.read()                             # Read the content of the file
 
@@ -380,7 +367,14 @@ class Automaton(object):
             Generate a file containing calls for the execution of the states 
             present on this Automaton
         '''
-        states_file = open("STATES.py", "a+")                                  # Open the file with the states handlers
+        filename = "handlers/STATES.py"
+        if not os.path.exists(os.path.dirname(filename)):
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+        states_file = open(filename, "a+")                                  # Open the file with the states handlers
         states_file.seek(0, os.SEEK_SET)                                # Move the cursor to first line
         content = states_file.read()                                    # Read the content of the file
 
@@ -389,19 +383,25 @@ class Automaton(object):
             states_file.write("from threading import Thread\n")         # Insert importation of Thread
             states_file.seek(0, os.SEEK_END)
 
-        #Verify presence of each state and insert if not already defined
-        for state in self.__states.index:
-            code = "def " + state                                       # Call for state
+        class_name = "class " + self.__name.replace(" ","_") + ":"
+        if class_name not in content:
+            states_file.write("\n\n" + class_name)
 
-            if code not in content:
-                states_file.write("\n\n\n##### -- " + state.upper() + " call & handler -- ########################################")
+            #Insert states
+            for state in self.__states.index:
+                code = "def " + state                                       # Call for state
+
+                # if code not in content:
+                states_file.write("\n\n\t##### -- " + state.upper() + " call & handler -- ########################################")
 
                 # State call
-                states_file.write("\n" + code + "(param = None):\n\th = Thread(target=" + state + "_handler, args=[param])\n\th.start()\n")
+                states_file.write("\n\t" + code + "(param = None):")
+                states_file.write("\n\t\th = Thread(target=" + self.__name.replace(" ","_") + "." + state + "_handler, args=[param])")
+                states_file.write("\n\t\th.start()\n")
 
                 #State handler
-                states_file.write("\n" + code + "_handler(param = None):")
-                states_file.write("\n\t#Write code here...")
-                states_file.write("\n\tprint('" + state + " running ...')")
-                states_file.write("\n\tpass")
-        states_file.close()                                             # Close the access to the file
+                states_file.write("\n\t" + code + "_handler(param = None):")
+                states_file.write("\n\t\t#Write code here...")
+                states_file.write("\n\t\tprint('" + state + " running ...')")
+                states_file.write("\n\t\tpass")
+            states_file.close()                                             # Close the access to the file
