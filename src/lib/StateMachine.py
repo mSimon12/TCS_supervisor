@@ -2,8 +2,8 @@ import pandas as pd
 from threading import Thread
 
 from lib.Automaton import Automaton
-import lib.EventMonitor as em
 from EVENTS import *
+from STATES import *
 
 ######################################################################################################### 
 class StateMachine(Thread):
@@ -17,35 +17,44 @@ class StateMachine(Thread):
         self.__SM = automaton                                                                   # Use the automaton as SM
 
     def run(self):
-        # global last_event, event_occured
 
         states = self.__SM.get_states()                                                         # Get the states of the Automaton
         alpha = self.__SM.get_alphabet()                                                        # Get the events of the Automaton
         trans = self.__SM.get_transitions()                                                     # Get the alphabet of the Automaton
         current_state = states.loc[states['initial'] == True].index[0]                          # Get initial state
 
-        # Enable and disable events
-        for e in alpha:
-            if trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty:
-                # Disable event
-                eval(e).set_status(self.__name, False)
-            else:
-                # Enable event
-                eval(e).set_status(self.__name, True)
-
-        last_received_event = None
-        # Initialize Loop to control the State Machine
+        # Loop to control the State Machine
         while True:
-            em.event_occured.acquire()                           # Acquire access to the event section
-            while last_received_event == em.last_event:
-                try:
-                    em.event_occured.wait()                      # Wait the occurence of a new event
-                except RuntimeError:
-                    print("ERROR: Unable to wait new event!")
-                em.event_occured.release()                       # Release access to the event section
-            event = em.last_event                                # Get the last occured event
-            last_received_event = event
-            print("2 - state update")
+
+            # Call execution of the current node
+            eval(current_state)()
+
+            # Enable and disable events
+            for e in alpha:
+                if trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty:
+                    # Disable event
+                    eval(e).set_status(self.__name, False)
+                else:
+                    # Enable event
+                    eval(e).set_status(self.__name, True)
+
+            # Inform event monitor that the SM is updated
+            g_var.SM_mutex.acquire()
+            g_var.SM_status[self.__name] = True
+            g_var.SM_mutex.notify()
+
+            # Acquire access to the event section
+            g_var.req_SM_update.acquire()   
+
+            # Release the mutex for SM status                        
+            g_var.SM_mutex.release()
+            
+            try:
+                g_var.req_SM_update.wait()                          # Wait the occurence of a new event
+            except RuntimeError:
+                print("ERROR: Unable to wait new event!")
+            
+            event = g_var.last_event                                # Get the last occured event
 
             # Verify if the event belongs to this State Machine
             if event in alpha:
@@ -55,16 +64,9 @@ class StateMachine(Thread):
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
                     print("New state:  ", current_state)
-
-                    # Enable and disable events
-                    for e in alpha:
-                        if trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty:
-                            # Disable event
-                            eval(e).set_status(self.__name, False)
-                        else:
-                            # Enable event
-                            eval(e).set_status(self.__name, True)
-
             else:
                 print("The event '",event,"' does not exist on this SM!")
+            
+            # Release access to the event section
+            g_var.req_SM_update.release()                       
 

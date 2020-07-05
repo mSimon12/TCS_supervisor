@@ -10,19 +10,12 @@ SM = StateMachine(G1)
 SM.start()
 
 # The State Machine must be fully started before events occur
-time.sleep(2)
+# time.sleep(2)
 
 # Call event execution
 bat_OK.call()
 
 bat_L.call()
-bat_OK.call()
+bat_LL.call()
 bat_L.call()
 bat_OK.call()
-bat_L.call()
-bat_OK.call()
-
-# while True:
-    # e = input("Which is the event?\nEvent: ")
-    # bat_L()
-    # trigger_event(e)

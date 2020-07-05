@@ -295,15 +295,50 @@ class Automaton(object):
         events_file.seek(0, os.SEEK_SET)                         # Move the cursor to first line
         content = events_file.read()                             # Read the content of the file
 
+        # Insert importation of Thread
         if "from threading import Thread" not in content:
             events_file.seek(0, os.SEEK_SET)
-            events_file.write("from threading import Thread, Condition\n")                      # Insert importation of Thread
-            events_file.seek(0, os.SEEK_END)
+            events_file.write("from threading import Thread, Condition\n")                      
+        
+        # Insert global variables and mutexes
+        if "class g_var:" not in content:
+            events_file.write("\n# Global variables and mutexes")
+            events_file.write("\nclass g_var:")
+            events_file.write("\n\tSM_status = {}")
+            events_file.write("\n\tSM_mutex = Condition()")
+            events_file.write("\n\tlast_event = None")
+            events_file.write("\n\treq_SM_update = Condition()") 
 
-        if "from lib.EventMonitor import trigger_event" not in content:
-            events_file.seek(0, os.SEEK_SET)
-            events_file.write("from lib.EventMonitor import trigger_event\n")         # Insert importation of Event trigger
-            events_file.seek(0, os.SEEK_END)
+        # Insert general event caller
+        if "def trigger_event" not in content:
+            events_file.write("\n\n##### -- General event caller -- ########################################")
+            events_file.write("\ndef trigger_event(event, handler, param):")
+            events_file.write("\n\t'''\n\t\tTrigger event handler and notify State Machines about the event occured.\n\t'''")
+            
+            events_file.write("\n\tg_var.SM_mutex.acquire()")
+            events_file.write("\n\t#Verify if all Machines are updated")
+            events_file.write("\n\twhile (not all(g_var.SM_status.values()) or (not bool(g_var.SM_status))):")
+            events_file.write("\n\t\tg_var.SM_mutex.wait()\n")
+
+            events_file.write("\n\t#Verify if all SM enable this event")	
+            events_file.write("\n\tg_var.req_SM_update.acquire()")
+            events_file.write("\n\tif eval(event).get_status() == True:")
+            events_file.write("\n\t\tg_var.SM_status = {x: False for x in g_var.SM_status}	# Clear all SM status")
+            events_file.write("\n\t\tg_var.last_event = event")  
+            events_file.write("\n\t\th = Thread(target=handler, args=[param])")
+            events_file.write("\n\t\th.start()")
+            events_file.write("\n\t\th.join()")
+            events_file.write("\n\n\t\t# Notify State Machines the need of update")
+            events_file.write("\n\t\ttry:")
+            events_file.write("\n\t\t\tg_var.req_SM_update.notifyAll()")
+            events_file.write("\n\t\texcept RuntimeError:")
+            events_file.write("\n\t\t\tprint('ERROR: Unable to notify new event!')")
+            events_file.write("\n\telse:")
+            events_file.write("\n\t\tprint(event, ' not enabled!')")
+            events_file.write("\n\tg_var.req_SM_update.release()")
+            events_file.write("\n\tg_var.SM_mutex.release()")
+          
+        events_file.seek(0, os.SEEK_END)
 
         #Verify presence of each event and insert if not already defined
         for event in self.__events.index:
@@ -316,29 +351,17 @@ class Automaton(object):
                 events_file.write("\n" + code)  
                 
                 # Insert status variable
-                events_file.write("\n\t__count = 0")
-                events_file.write("\n\t__enableCond = Condition()")
                 events_file.write("\n\t__enabled = {}")
 
                 # Insert event call
                 events_file.write("\n\n\tdef call(param = None):")
-                events_file.write("\n\t\t" + event + ".__enableCond.acquire()")
-                events_file.write("\n\t\t#Verify if all Machines are updated")
-                events_file.write("\n\t\twhile " + event + ".__count < len(" + event + ".__enabled):")
-                events_file.write("\n\t\t\t" + event + ".__enableCond.wait()")
-                events_file.write("\n\t\t" + event + ".__count = 0")
-
-                events_file.write("\n\t\tif all(" + event +".__enabled.values()) == True:")
-                events_file.write("\n\t\t\ttrigger_event('" + event + "')")
-                events_file.write("\n\t\t\th = Thread(target=" + event + ".__handler, args=[param])")
-                events_file.write("\n\t\t\th.start()")
-                events_file.write("\n\t\telse:")
-                events_file.write("\n\t\t\tprint('" + event + " not enabled!')")
-                events_file.write("\n\t\t" + event + ".__enableCond.release()")
+                events_file.write("\n\t\ttrigger_event('" + event + "', " + event + ".__handler, param)")
 
                 # Insert event handler
                 events_file.write("\n\n\tdef __handler(param = None):")
-                events_file.write("\n\t\t#Write code here...\n\t\tpass")
+                events_file.write("\n\t\t#Write code here...")
+                events_file.write("\n\t\tprint('Executing "+ event +"...')")
+                events_file.write("\n\t\tpass")
 
                 # Insert get status function
                 events_file.write("\n\n\tdef get_status():")
@@ -347,11 +370,7 @@ class Automaton(object):
 
                 #Insert set status function
                 events_file.write("\n\n\tdef set_status(name, status):")
-                events_file.write("\n\t\t" + event + ".__enableCond.acquire()")
                 events_file.write("\n\t\t" + event +".__enabled[name] = status")
-                events_file.write("\n\t\t" + event + ".__count += 1")
-                events_file.write("\n\t\t" + event + ".__enableCond.notify()")
-                events_file.write("\n\t\t" + event + ".__enableCond.release()")
 
         events_file.close()                                             
 
@@ -381,5 +400,8 @@ class Automaton(object):
                 states_file.write("\n" + code + "(param = None):\n\th = Thread(target=" + state + "_handler, args=[param])\n\th.start()\n")
 
                 #State handler
-                states_file.write("\n" + code + "_handler(param = None):\n\tpass\t#Write code here...")
+                states_file.write("\n" + code + "_handler(param = None):")
+                states_file.write("\n\t#Write code here...")
+                states_file.write("\n\tprint('" + state + " running ...')")
+                states_file.write("\n\tpass")
         states_file.close()                                             # Close the access to the file

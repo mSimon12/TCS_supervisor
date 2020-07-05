@@ -1,31 +1,52 @@
 from threading import Thread, Condition
-from lib.EventMonitor import trigger_event
 
+# Global variables and mutexes
+class g_var:
+	SM_status = {}
+	SM_mutex = Condition()
+	last_event = None
+	req_SM_update = Condition()
+
+##### -- General event caller -- ########################################
+def trigger_event(event, handler, param):
+	'''
+		Trigger event handler and notify State Machines about the event occured.
+	'''
+	g_var.SM_mutex.acquire()
+	#Verify if all Machines are updated
+	while (not all(g_var.SM_status.values()) or (not bool(g_var.SM_status))):
+		g_var.SM_mutex.wait()
+
+	#Verify if all SM enable this event
+	g_var.req_SM_update.acquire()
+	if eval(event).get_status() == True:
+		g_var.SM_status = {x: False for x in g_var.SM_status}	# Clear all SM status
+		g_var.last_event = event
+		h = Thread(target=handler, args=[param])
+		h.start()
+		h.join()
+
+		# Notify State Machines the need of update
+		try:
+			g_var.req_SM_update.notifyAll()
+		except RuntimeError:
+			print('ERROR: Unable to notify new event!')
+	else:
+		print(event, ' not enabled!')
+	g_var.req_SM_update.release()
+	g_var.SM_mutex.release()
 
 
 ##### -- bat_L call & handler -- ########################################
 class bat_L:
-	__count = 0
-	__enableCond = Condition()
 	__enabled = {}
 
 	def call(param = None):
-		bat_L.__enableCond.acquire()
-		#Verify if all Machines are updated
-		while bat_L.__count < len(bat_L.__enabled):
-			bat_L.__enableCond.wait()
-		bat_L.__count = 0
-		print("3 - bat_L allowed")
-		if all(bat_L.__enabled.values()) == True:
-			trigger_event('bat_L')
-			h = Thread(target=bat_L.__handler, args=[param])
-			h.start()
-		else:
-			print('bat_L not enabled!')
-		bat_L.__enableCond.release()
+		trigger_event('bat_L', bat_L.__handler, param)
 
 	def __handler(param = None):
 		#Write code here...
+		print('Executing bat_L...')
 		pass
 
 	def get_status():
@@ -36,36 +57,19 @@ class bat_L:
 		return all(bat_L.__enabled.values())
 
 	def set_status(name, status):
-		bat_L.__enableCond.acquire()
 		bat_L.__enabled[name] = status
-		bat_L.__count += 1
-		bat_L.__enableCond.notify()
-		bat_L.__enableCond.release()
 
 
 ##### -- bat_LL call & handler -- ########################################
 class bat_LL:
-	__count = 0
-	__enableCond = Condition()
 	__enabled = {}
 
 	def call(param = None):
-		bat_LL.__enableCond.acquire()
-		#Verify if all Machines are updated
-		while bat_LL.__count < len(bat_LL.__enabled):
-			bat_LL.__enableCond.wait()
-		bat_LL.__count = 0
-		print("3 - bat_LL allowed")
-		if all(bat_LL.__enabled.values()) == True:
-			trigger_event('bat_LL')
-			h = Thread(target=bat_LL.__handler, args=[param])
-			h.start()
-		else:
-			print('bat_LL not enabled!')
-		bat_LL.__enableCond.release()
+		trigger_event('bat_LL', bat_LL.__handler, param)
 
 	def __handler(param = None):
 		#Write code here...
+		print('Executing bat_LL...')
 		pass
 
 	def get_status():
@@ -76,36 +80,19 @@ class bat_LL:
 		return all(bat_LL.__enabled.values())
 
 	def set_status(name, status):
-		bat_LL.__enableCond.acquire()
 		bat_LL.__enabled[name] = status
-		bat_LL.__count += 1
-		bat_LL.__enableCond.notify()
-		bat_LL.__enableCond.release()
 
 
 ##### -- bat_OK call & handler -- ########################################
 class bat_OK:
-	__count = 0
-	__enableCond = Condition()
 	__enabled = {}
 
 	def call(param = None):
-		bat_OK.__enableCond.acquire()
-		#Verify if all Machines are updated
-		while bat_OK.__count < len(bat_OK.__enabled):
-			bat_OK.__enableCond.wait()
-		bat_OK.__count = 0
-		print("3 - bat_OK allowed")
-		if all(bat_OK.__enabled.values()) == True:
-			trigger_event('bat_OK')
-			h = Thread(target=bat_OK.__handler, args=[param])
-			h.start()
-		else:
-			print('bat_OK not enabled!')
-		bat_OK.__enableCond.release()
+		trigger_event('bat_OK', bat_OK.__handler, param)
 
 	def __handler(param = None):
 		#Write code here...
+		print('Executing bat_OK...')
 		pass
 
 	def get_status():
@@ -116,8 +103,4 @@ class bat_OK:
 		return all(bat_OK.__enabled.values())
 
 	def set_status(name, status):
-		bat_OK.__enableCond.acquire()
 		bat_OK.__enabled[name] = status
-		bat_OK.__count += 1
-		bat_OK.__enableCond.notify()
-		bat_OK.__enableCond.release()

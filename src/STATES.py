@@ -8,7 +8,9 @@ def BAT_OK(param = None):
 	h.start()
 
 def BAT_OK_handler(param = None):
-	pass	#Write code here...
+	#Write code here...
+	print('BAT_OK running ...')
+	pass
 
 
 ##### -- CRITICAL call & handler -- ########################################
@@ -17,7 +19,9 @@ def CRITICAL(param = None):
 	h.start()
 
 def CRITICAL_handler(param = None):
-	pass	#Write code here...
+	#Write code here...
+	print('CRITICAL running ...')
+	pass
 
 
 ##### -- LOW call & handler -- ########################################
@@ -26,4 +30,6 @@ def LOW(param = None):
 	h.start()
 
 def LOW_handler(param = None):
-	pass	#Write code here...
+	#Write code here...
+	print('LOW running ...')
+	pass
