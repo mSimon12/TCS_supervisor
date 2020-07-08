@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Automata name="Untitled" major="0" minor="9">
+<Automaton name="approach" type="Plant">
+	<Events>
+		<Event id="0" label="abort_app"/>
+		<Event id="1" label="end_app" controllable="false"/>
+		<Event id="2" label="er_app" controllable="false"/>
+		<Event id="3" label="rsm_app"/>
+		<Event id="4" label="rst_app"/>
+		<Event id="5" label="st_app"/>
+		<Event id="6" label="sus_app"/>
+	</Events>
+	<States>
+		<State id="0" name="AP_ERROR"/>
+		<State id="1" name="AP_EXE" accepting="true"/>
+		<State id="2" name="AP_IDLE" initial="true" accepting="true"/>
+		<State id="3" name="AP_SUSP"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="4"/>
+		<Transition source="1" dest="0" event="2"/>
+		<Transition source="1" dest="3" event="6"/>
+		<Transition source="1" dest="2" event="1"/>
+		<Transition source="2" dest="1" event="5"/>
+		<Transition source="3" dest="2" event="0"/>
+		<Transition source="3" dest="0" event="2"/>
+		<Transition source="3" dest="1" event="3"/>
+	</Transitions>
+</Automaton>
+</Automata>

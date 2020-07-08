@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Automata name="Untitled" major="0" minor="9">
+<Automaton name="approach" type="Plant">
+	<Events>
+		<Event id="0" label="abort_app"/>
+		<Event id="1" label="end_app" controllable="false"/>
+		<Event id="2" label="er_app" controllable="false"/>
+		<Event id="3" label="rsm_app"/>
+		<Event id="4" label="rst_app"/>
+		<Event id="5" label="st_app"/>
+		<Event id="6" label="sus_app"/>
+	</Events>
+	<States>
+		<State id="0" name="AP_ERROR"/>
+		<State id="1" name="AP_EXE" accepting="true"/>
+		<State id="2" name="AP_IDLE" initial="true" accepting="true"/>
+		<State id="3" name="AP_SUSP"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="4"/>
+		<Transition source="1" dest="0" event="2"/>
+		<Transition source="1" dest="3" event="6"/>
+		<Transition source="1" dest="2" event="1"/>
+		<Transition source="2" dest="1" event="5"/>
+		<Transition source="3" dest="2" event="0"/>
+		<Transition source="3" dest="0" event="2"/>
+		<Transition source="3" dest="1" event="3"/>
+	</Transitions>
+</Automaton>
+<Automaton name="battery_monitor" type="Plant">
+	<Events>
+		<Event id="0" label="bat_L" controllable="false"/>
+		<Event id="1" label="bat_LL" controllable="false"/>
+		<Event id="2" label="bat_OK" controllable="false"/>
+	</Events>
+	<States>
+		<State id="0" name="BAT_OK" initial="true" accepting="true"/>
+		<State id="1" name="CRITICAL"/>
+		<State id="2" name="LOW"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="0"/>
+		<Transition source="1" dest="2" event="0"/>
+		<Transition source="2" dest="1" event="1"/>
+		<Transition source="2" dest="0" event="2"/>
+	</Transitions>
+</Automaton>
+<Automaton name="communication" type="Plant">
+	<Events>
+		<Event id="0" label="call_tele" controllable="false"/>
+		<Event id="1" label="no_rb_pref" controllable="false"/>
+		<Event id="2" label="rb_pref" controllable="false"/>
+		<Event id="3" label="rep_gas"/>
+		<Event id="4" label="rep_victim"/>
+		<Event id="5" label="req_assist"/>
+	</Events>
+	<States>
+		<State id="0" name="COMMUNICATION" initial="true" accepting="true"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="0" event="3"/>
+		<Transition source="0" dest="0" event="4"/>
+		<Transition source="0" dest="0" event="5"/>
+		<Transition source="0" dest="0" event="0"/>
+		<Transition source="0" dest="0" event="1"/>
+		<Transition source="0" dest="0" event="2"/>
+	</Transitions>
+</Automaton>
+<Automaton name="explore" type="Plant">
+	<Events>
+		<Event id="0" label="abort_exp"/>
+		<Event id="1" label="end_exp" controllable="false"/>
+		<Event id="2" label="er_exp" controllable="false"/>
+		<Event id="3" label="rsm_exp"/>
+		<Event id="4" label="rst_exp"/>
+		<Event id="5" label="st_exp"/>
+		<Event id="6" label="sus_exp"/>
+	</Events>
+	<States>
+		<State id="0" name="EXP_ERROR"/>
+		<State id="1" name="EXP_EXE" accepting="true"/>
+		<State id="2" name="EXP_IDLE" initial="true" accepting="true"/>
+		<State id="3" name="EXP_SUSP"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="4"/>
+		<Transition source="1" dest="0" event="2"/>
+		<Transition source="1" dest="3" event="6"/>
+		<Transition source="1" dest="2" event="1"/>
+		<Transition source="2" dest="1" event="5"/>
+		<Transition source="3" dest="2" event="0"/>
+		<Transition source="3" dest="0" event="2"/>
+		<Transition source="3" dest="1" event="3"/>
+	</Transitions>
+</Automaton>
+<Automaton name="failures" type="Plant">
+	<Events>
+		<Event id="0" label="critic_fail" controllable="false"/>
+		<Event id="1" label="fail" controllable="false"/>
+		<Event id="2" label="pos_fail" controllable="false"/>
+		<Event id="3" label="rst_f"/>
+	</Events>
+	<States>
+		<State id="0" name="CRITIC_F"/>
+		<State id="1" name="NO_FAIL" initial="true" accepting="true"/>
+		<State id="2" name="POS_F"/>
+		<State id="3" name="SIMP_F"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="1" event="3"/>
+		<Transition source="1" dest="3" event="1"/>
+		<Transition source="1" dest="0" event="0"/>
+		<Transition source="1" dest="2" event="2"/>
+		<Transition source="2" dest="3" event="1"/>
+		<Transition source="2" dest="0" event="0"/>
+		<Transition source="2" dest="1" event="3"/>
+		<Transition source="3" dest="1" event="3"/>
+		<Transition source="3" dest="0" event="0"/>
+	</Transitions>
+</Automaton>
+<Automaton name="gas_sensor" type="Plant">
+	<Events>
+		<Event id="0" label="er_gs" controllable="false"/>
+		<Event id="1" label="gas_found" controllable="false"/>
+		<Event id="2" label="off_gs"/>
+		<Event id="3" label="on_gs"/>
+		<Event id="4" label="rst_gs"/>
+	</Events>
+	<States>
+		<State id="0" name="GS_ERROR"/>
+		<State id="1" name="GS_OFF" initial="true" accepting="true"/>
+		<State id="2" name="GS_ON" accepting="true"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="1" event="4"/>
+		<Transition source="1" dest="2" event="3"/>
+		<Transition source="2" dest="1" event="2"/>
+		<Transition source="2" dest="2" event="1"/>
+		<Transition source="2" dest="0" event="0"/>
+	</Transitions>
+</Automaton>
+<Automaton name="motion_system" type="Plant">
+	<Events>
+		<Event id="0" label="move_to"/>
+	</Events>
+	<States>
+		<State id="0" name="STEP_MOTIONS" initial="true" accepting="true"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="0" event="0"/>
+	</Transitions>
+</Automaton>
+<Automaton name="return_to_base" type="Plant">
+	<Events>
+		<Event id="0" label="abort_rb"/>
+		<Event id="1" label="end_rb" controllable="false"/>
+		<Event id="2" label="er_rb" controllable="false"/>
+		<Event id="3" label="rsm_rb"/>
+		<Event id="4" label="rst_rb"/>
+		<Event id="5" label="st_rb"/>
+		<Event id="6" label="sus_rb"/>
+	</Events>
+	<States>
+		<State id="0" name="RB_ERROR"/>
+		<State id="1" name="RB_EXE" accepting="true"/>
+		<State id="2" name="RB_IDLE" initial="true" accepting="true"/>
+		<State id="3" name="RB_SUSP"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="4"/>
+		<Transition source="1" dest="0" event="2"/>
+		<Transition source="1" dest="3" event="6"/>
+		<Transition source="1" dest="2" event="1"/>
+		<Transition source="2" dest="1" event="5"/>
+		<Transition source="3" dest="2" event="0"/>
+		<Transition source="3" dest="0" event="2"/>
+		<Transition source="3" dest="1" event="3"/>
+	</Transitions>
+</Automaton>
+<Automaton name="teleoperation" type="Plant">
+	<Events>
+		<Event id="0" label="end_tele" controllable="false"/>
+		<Event id="1" label="er_tele" controllable="false"/>
+		<Event id="2" label="rst_tele"/>
+		<Event id="3" label="st_tele"/>
+	</Events>
+	<States>
+		<State id="0" name="TELE_ERROR"/>
+		<State id="1" name="TELE_EXE" accepting="true"/>
+		<State id="2" name="TELE_IDLE" initial="true" accepting="true"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="2"/>
+		<Transition source="1" dest="0" event="1"/>
+		<Transition source="1" dest="2" event="0"/>
+		<Transition source="2" dest="1" event="3"/>
+	</Transitions>
+</Automaton>
+<Automaton name="verify_surroundings" type="Plant">
+	<Events>
+		<Event id="0" label="abort_vsv"/>
+		<Event id="1" label="end_vsv" controllable="false"/>
+		<Event id="2" label="er_vsv" controllable="false"/>
+		<Event id="3" label="rsm_vsv"/>
+		<Event id="4" label="rst_vsv"/>
+		<Event id="5" label="st_vsv"/>
+		<Event id="6" label="sus_vsv"/>
+	</Events>
+	<States>
+		<State id="0" name="VSV_ERROR"/>
+		<State id="1" name="VSV_EXE" accepting="true"/>
+		<State id="2" name="VSV_IDLE" initial="true" accepting="true"/>
+		<State id="3" name="VSV_SUSP"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="2" event="4"/>
+		<Transition source="1" dest="0" event="2"/>
+		<Transition source="1" dest="3" event="6"/>
+		<Transition source="1" dest="2" event="1"/>
+		<Transition source="2" dest="1" event="5"/>
+		<Transition source="3" dest="2" event="0"/>
+		<Transition source="3" dest="0" event="2"/>
+		<Transition source="3" dest="1" event="3"/>
+	</Transitions>
+</Automaton>
+<Automaton name="victim_system" type="Plant">
+	<Events>
+		<Event id="0" label="er_vs" controllable="false"/>
+		<Event id="1" label="off_vs"/>
+		<Event id="2" label="on_vs"/>
+		<Event id="3" label="rst_vs"/>
+		<Event id="4" label="victim_found" controllable="false"/>
+	</Events>
+	<States>
+		<State id="0" name="VS_ERROR"/>
+		<State id="1" name="VS_OFF" initial="true" accepting="true"/>
+		<State id="2" name="VS_ON" accepting="true"/>
+	</States>
+	<Transitions>
+		<Transition source="0" dest="1" event="3"/>
+		<Transition source="1" dest="2" event="2"/>
+		<Transition source="2" dest="1" event="1"/>
+		<Transition source="2" dest="2" event="4"/>
+		<Transition source="2" dest="0" event="0"/>
+	</Transitions>
+</Automaton>
+</Automata>

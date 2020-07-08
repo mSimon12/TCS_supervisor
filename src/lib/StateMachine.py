@@ -50,7 +50,7 @@ class StateMachine(Thread):
             try:
                 g_var.req_SM_update.wait()                          # Wait the occurence of a new event
             except RuntimeError:
-                print("ERROR: Unable to wait new event!")
+                print("[" + self.__name + "]: ERROR: Unable to wait new event!")
             
             event = g_var.last_event                                # Get the last occured event
 
@@ -58,14 +58,16 @@ class StateMachine(Thread):
             if event in alpha:
                 # Verify if the event trigger a transition
                 if trans[(trans['st_node'] == current_state) & (trans['event'] == event)].empty:
-                    print("ALERT!!!!\nThis transition should not have occured!")
+                    print("[" + self.__name + "]: ALERT!!!!\nThis transition should not have occured!")
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
-                    print("\nNew state:  ", current_state)
+                    print("\n[" + self.__name + "]: New state:  ", current_state)
+
                     # Call execution of the current node
                     eval(self.__name + "." + current_state)()
             else:
-                print("The event '",event,"' does not exist on this SM!")
+                # print("The event '",event,"' does not exist on this SM!")
+                pass
             
             # Release access to the event section
             g_var.req_SM_update.release()                       

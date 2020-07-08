@@ -9,6 +9,42 @@ from graphviz import Digraph
 import untangle as ut 
 
 ######################################################################################################### 
+class MultiAutomata(object):
+    '''
+        Class to generate multiple Automata
+    '''
+    def __init__(self, block_name):
+        self.__name = block_name
+        self.__Automata = {}        #Dictionary cantaining all automata by name
+
+    def read_xml(self, file):
+        '''
+            Read all Automata in the file
+        '''
+        aut = ut.parse(file)       #Automaton object
+        for a in aut.Automata.Automaton:
+            G = Automaton(a['name'])
+            G.read_xml(file, a['name'])
+            self.__Automata[a['name']] = G
+
+
+    def get_automata(self):
+        '''
+            Return a dictionary containing all automata by name
+        '''
+        return self.__Automata
+
+
+    def generate_calls(self):
+        '''
+            Create the calls of all events and states present on the set of automata
+        '''
+        for a in self.__Automata.values():
+            a.gen_events_calls()
+            a.gen_states_calls()
+
+
+######################################################################################################### 
 class Automaton(object):
     '''
         Class with tools for dinamicaly building an Automaton and displaying it
@@ -46,13 +82,32 @@ class Automaton(object):
         graph.view(filename=self.__name,directory='output')      #Save Automaton as pdf file
 
 
-    def read_xml(self,file):
+    def read_xml(self, file, auto_name = None):
         '''
-            Create the supervisor from a xml file configured as Supremica output
+            Create the automaton from a xml file configured as Supremica output
+            file = the name of the XML file ontaining one or multiple Automata
+            aut_name = Name of the desired automaton into a file with multiple Automata  
         '''
-        aut = ut.parse(file)    #Automaton object
+        if auto_name == None:
+            auto_name = self.__name
+
+        aut_file = ut.parse(file)       #Automaton object
+
+        if len(aut_file.Automata) > 1:
+            # Select automaton according name if there is more than one in the xml file
+            aut = None
+            for x in aut_file.Automata.Automaton:
+                if x['name'] == auto_name:
+                    aut = x
+
+            if aut == None:
+                print("\n >>> Multiple Automata and no Automaton named '" + auto_name + "' on this xml file! <<<\n")
+                return False
+        else:
+            aut = aut_file.Automata.Automaton
+
         #Insert states
-        for state in aut.Automata.Automaton.States.children:
+        for state in aut.States.children:
             #Get state id
             idt = state['id']
 
@@ -78,7 +133,7 @@ class Automaton(object):
             self.insert_state(state['name'], idt, init, accept)
 
         #Insert events
-        for event in aut.Automata.Automaton.Events.children:
+        for event in aut.Events.children:
             #Get state id
             idt = event['id']
 
@@ -96,7 +151,7 @@ class Automaton(object):
             self.insert_event(event['label'], idt, cont)
 
         #Insert transitions
-        for trans in aut.Automata.Automaton.Transitions.children:
+        for trans in aut.Transitions.children:
             source_id = trans['source']
             source = self.__states[self.__states['node_id'] == source_id].index[0]   #Get source name
 
@@ -347,7 +402,7 @@ class Automaton(object):
                 # Insert event handler
                 events_file.write("\n\n\tdef __handler(param = None):")
                 events_file.write("\n\t\t#Write code here...")
-                events_file.write("\n\t\tprint('Executing "+ event +"...')")
+                events_file.write("\n\t\tprint('Executing event "+ event +"...')")
                 events_file.write("\n\t\tpass")
 
                 # Insert get status function
@@ -402,6 +457,6 @@ class Automaton(object):
                 #State handler
                 states_file.write("\n\t" + code + "_handler(param = None):")
                 states_file.write("\n\t\t#Write code here...")
-                states_file.write("\n\t\tprint('" + state + " running ...')")
+                states_file.write("\n\t\tprint('State " + state + " running ...')")
                 states_file.write("\n\t\tpass")
             states_file.close()                                             # Close the access to the file
