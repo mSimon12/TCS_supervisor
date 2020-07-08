@@ -1,26 +1,19 @@
 from lib.Automaton import Automaton, MultiAutomata
-from lib.StateMachine import StateMachine
+from lib.StateMachine import StateMachine, Supervisor
 from handlers.EVENTS import *
 
-# Create and Start the State Machine
+#### Create and Start one State Machine  #####################################
 # G1 = Automaton('Battery Monitor')
 # G1.read_xml('files/battery_monitor.xml')
 
-# G2 = Automaton('Approach')
-# G2.read_xml('files/approach.xml')
+# SM = Supervisor(G1)
+# SM.start()
 
-# SM1 = StateMachine(G1)
-# SM2 = StateMachine(G2)
 
-# SM1.start()
-# SM2.start()
-
+#### Create and Start Multiple State Machines from one file  #################
 G = MultiAutomata('Plant')
-G.read_xml('files/plant.xml')
-
+G.read_xml('files/plant.xml')         # File with multiple Automata
 SM = {}
-
-#Create all State Machines 
 for aut in G.get_automata().values():
     SM[aut.get_name()] = StateMachine(aut)
 
@@ -28,21 +21,31 @@ for aut in G.get_automata().values():
 for sm in SM.values():
     sm.start()
 
-# Call event execution
+
+##############################################################################
+#### Create and Start one Supervisor  ########################################
+# G1 = Automaton('Battery Monitor')
+# G1.read_xml('files/battery_monitor.xml')
+
+# SM = Supervisor(G1)
+# SM.start()
+
+
+#### Create and Start Multiple Supervisors from one file  ###################
+# G = MultiAutomata('Supervisors')
+# G.read_xml('files/supervisors.xml')         # File with multiple Automata
+# SUP = {}
+# for aut in G.get_automata().values():
+#     SUP[aut.get_name()] = Supervisor(aut)
+
+# #Start all State Machines
+# for sup in SUP.values():
+#     sup.start()
+
+
+#############################################################################
+#### Call events execution ##################################################
 bat_OK.call()
 
-# bat_L.call()
+bat_L.call()
 # bat_LL.call()
-
-st_app.call()
-
-rsm_app.call()
-# st_app.call()
-
-# bat_L.call()
-# bat_OK.call()
-
-# end_app.call()
-
-# bat_L.call()
-# bat_OK.call()

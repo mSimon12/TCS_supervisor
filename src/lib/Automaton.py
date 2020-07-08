@@ -1,6 +1,5 @@
 
 import os
-import os
 import errno
 
 import pandas as pd
@@ -436,7 +435,11 @@ class Automaton(object):
         if "from threading import Thread" not in content:
             states_file.seek(0, os.SEEK_SET)
             states_file.write("from threading import Thread\n")         # Insert importation of Thread
-            states_file.seek(0, os.SEEK_END)
+        
+        if "from handlers.EVENTS import" not in content:
+            states_file.write("from handlers.EVENTS import *\n")         # Insert importation of Thread
+        
+        states_file.seek(0, os.SEEK_END)
 
         class_name = "class " + self.__name.replace(" ","_") + ":"
         if class_name not in content:
