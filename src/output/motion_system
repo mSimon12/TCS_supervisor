@@ -1,0 +1,6 @@
+// motion_system
+digraph {
+	rankdir=LR
+	STEP_MOTIONS [label=STEP_MOTIONS color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	STEP_MOTIONS -> STEP_MOTIONS [label=move_to fontcolor=blue]
+}

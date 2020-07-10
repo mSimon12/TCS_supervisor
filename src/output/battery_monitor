@@ -1,4 +1,4 @@
-// Battery Monitor
+// battery_monitor
 digraph {
 	rankdir=LR
 	BAT_OK [label=BAT_OK color=black fillcolor=white shape=doublecircle style=filled]

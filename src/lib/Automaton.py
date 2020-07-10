@@ -61,12 +61,11 @@ class Automaton(object):
         '''
             Print a graph representing the supervisor structure
         '''
-        graph = Digraph(comment=self.__name, filename='{}.gv'.format(self.__name), format='pdf')
+        graph = Digraph(comment=self.__name, filename='{}.gv'.format(self.__name), format='png')
         graph.attr(rankdir='LR')
 
         if current_state == 'initial':
             current_state = self.__states[self.__states['initial'] == True].index
-            print(current_state)
 
         # Insert nodes in the graph
         n_color = {}
@@ -113,7 +112,7 @@ class Automaton(object):
                     separetor = ',\n'
                     graph.edge(s_from, s_to, separetor.join(not_cont.index.values),fontcolor='red', style='dashed')
         
-        graph.view(filename=self.__name,directory='output')      #Save Automaton as pdf file
+        graph.render(f'output/{graph.comment}', view=False)     #Save Automaton as png file
 
 
     def read_xml(self, file, auto_name = None):

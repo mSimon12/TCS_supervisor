@@ -1,0 +1,16 @@
+// approach
+digraph {
+	rankdir=LR
+	AP_ERROR [label=AP_ERROR color=black fillcolor=white shape=circle style=filled]
+	AP_EXE [label=AP_EXE color=black fillcolor=white shape=doublecircle style=filled]
+	AP_IDLE [label=AP_IDLE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	AP_SUSP [label=AP_SUSP color=black fillcolor=white shape=circle style=filled]
+	AP_ERROR -> AP_IDLE [label=rst_app fontcolor=blue]
+	AP_EXE -> AP_ERROR [label=er_app fontcolor=red style=dashed]
+	AP_EXE -> AP_IDLE [label=end_app fontcolor=red style=dashed]
+	AP_EXE -> AP_SUSP [label=sus_app fontcolor=blue]
+	AP_IDLE -> AP_EXE [label=st_app fontcolor=blue]
+	AP_SUSP -> AP_ERROR [label=er_app fontcolor=red style=dashed]
+	AP_SUSP -> AP_EXE [label=rsm_app fontcolor=blue]
+	AP_SUSP -> AP_IDLE [label=abort_app fontcolor=blue]
+}

@@ -1,0 +1,17 @@
+// failures
+digraph {
+	rankdir=LR
+	CRITIC_F [label=CRITIC_F color=black fillcolor=white shape=circle style=filled]
+	NO_FAIL [label=NO_FAIL color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	POS_F [label=POS_F color=black fillcolor=white shape=circle style=filled]
+	SIMP_F [label=SIMP_F color=black fillcolor=white shape=circle style=filled]
+	CRITIC_F -> NO_FAIL [label=rst_f fontcolor=blue]
+	NO_FAIL -> CRITIC_F [label=critic_fail fontcolor=red style=dashed]
+	NO_FAIL -> POS_F [label=pos_fail fontcolor=red style=dashed]
+	NO_FAIL -> SIMP_F [label=fail fontcolor=red style=dashed]
+	POS_F -> CRITIC_F [label=critic_fail fontcolor=red style=dashed]
+	POS_F -> NO_FAIL [label=rst_f fontcolor=blue]
+	POS_F -> SIMP_F [label=fail fontcolor=red style=dashed]
+	SIMP_F -> CRITIC_F [label=critic_fail fontcolor=red style=dashed]
+	SIMP_F -> NO_FAIL [label=rst_f fontcolor=blue]
+}

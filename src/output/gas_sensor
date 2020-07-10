@@ -1,0 +1,12 @@
+// gas_sensor
+digraph {
+	rankdir=LR
+	GS_ERROR [label=GS_ERROR color=black fillcolor=white shape=circle style=filled]
+	GS_OFF [label=GS_OFF color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	GS_ON [label=GS_ON color=black fillcolor=white shape=doublecircle style=filled]
+	GS_ERROR -> GS_OFF [label=rst_gs fontcolor=blue]
+	GS_OFF -> GS_ON [label=on_gs fontcolor=blue]
+	GS_ON -> GS_ERROR [label=er_gs fontcolor=red style=dashed]
+	GS_ON -> GS_OFF [label=off_gs fontcolor=blue]
+	GS_ON -> GS_ON [label=gas_found fontcolor=red style=dashed]
+}

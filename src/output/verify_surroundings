@@ -1,0 +1,16 @@
+// verify_surroundings
+digraph {
+	rankdir=LR
+	VSV_ERROR [label=VSV_ERROR color=black fillcolor=white shape=circle style=filled]
+	VSV_EXE [label=VSV_EXE color=black fillcolor=white shape=doublecircle style=filled]
+	VSV_IDLE [label=VSV_IDLE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	VSV_SUSP [label=VSV_SUSP color=black fillcolor=white shape=circle style=filled]
+	VSV_ERROR -> VSV_IDLE [label=rst_vsv fontcolor=blue]
+	VSV_EXE -> VSV_ERROR [label=er_vsv fontcolor=red style=dashed]
+	VSV_EXE -> VSV_IDLE [label=end_vsv fontcolor=red style=dashed]
+	VSV_EXE -> VSV_SUSP [label=sus_vsv fontcolor=blue]
+	VSV_IDLE -> VSV_EXE [label=st_vsv fontcolor=blue]
+	VSV_SUSP -> VSV_ERROR [label=er_vsv fontcolor=red style=dashed]
+	VSV_SUSP -> VSV_EXE [label=rsm_vsv fontcolor=blue]
+	VSV_SUSP -> VSV_IDLE [label=abort_vsv fontcolor=blue]
+}
