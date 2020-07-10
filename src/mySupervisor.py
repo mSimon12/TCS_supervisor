@@ -3,23 +3,23 @@ from lib.StateMachine import StateMachine, Supervisor
 from handlers.EVENTS import *
 
 #### Create and Start one State Machine  #####################################
-# G1 = Automaton('Battery Monitor')
-# G1.read_xml('files/battery_monitor.xml')
+G1 = Automaton('Battery Monitor')
+G1.read_xml('files/battery_monitor.xml')
 
-# SM = Supervisor(G1)
-# SM.start()
+SM = StateMachine(G1)
+SM.start()
 
 
 #### Create and Start Multiple State Machines from one file  #################
-G = MultiAutomata('Plant')
-G.read_xml('files/plant.xml')         # File with multiple Automata
-SM = {}
-for aut in G.get_automata().values():
-    SM[aut.get_name()] = StateMachine(aut)
+# G = MultiAutomata('Plant')
+# G.read_xml('files/plant.xml')         # File with multiple Automata
+# SM = {}
+# for aut in G.get_automata().values():
+#     SM[aut.get_name()] = StateMachine(aut)
 
-#Start all State Machines
-for sm in SM.values():
-    sm.start()
+# #Start all State Machines
+# for sm in SM.values():
+#     sm.start()
 
 
 ##############################################################################
@@ -47,5 +47,5 @@ for sm in SM.values():
 #### Call events execution ##################################################
 bat_OK.call()
 
-bat_L.call()
-# bat_LL.call()
+# bat_L.call()
+

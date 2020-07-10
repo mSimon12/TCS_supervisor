@@ -57,26 +57,61 @@ class Automaton(object):
         self.__alphabet = set()                                                                 # Alphabet set
 
 
-    def show_automaton(self):
+    def export_automaton(self, current_state = 'initial'):
         '''
             Print a graph representing the supervisor structure
         '''
         graph = Digraph(comment=self.__name, filename='{}.gv'.format(self.__name), format='pdf')
+        graph.attr(rankdir='LR')
+
+        if current_state == 'initial':
+            current_state = self.__states[self.__states['initial'] == True].index
+            print(current_state)
 
         # Insert nodes in the graph
+        n_color = {}
+
         for s in self.__states.index:
-            graph.node(s,s,shape='circle')
+            if self.__states.loc[s,'accepting'] == True:
+                n_shape='doublecircle'
+            else:
+                n_shape = 'circle'
+
+            # if self.__states.loc[s,'initial'] == True:
+            if s == current_state:
+                n_color['line'] = 'blue'
+                n_color['fill'] = 'lightgrey'
+            else:
+                n_color['line'] = 'black'
+                n_color['fill'] = 'white'
+                
+            graph.node(s,s,shape=n_shape, color= n_color['line'], fillcolor=n_color['fill'], style= 'filled')
 
         # insert transitions in the graph
-        for t in self.__transitions.index:
-            graph.edge(self.__transitions.loc[t,'st_node'],self.__transitions.loc[t,'end_node'],self.__transitions.loc[t,'event'])
+        # for t in self.__transitions.index:
 
-        # for s_from in self.__states:
-        #     for s_to in self.__states:
-        #         transitions = self.__states[s_from].loc[self.__states[s_from]['output_node'] == s_to]
-        #         if not transitions.index.empty:
-        #             separetor = ','
-        #             graph.edge(s_from, s_to, separetor.join(transitions['transition'].values))
+        #     if self.__events.loc[self.__transitions.loc[t,'event'],'controllable'] == True:
+        #         t_color = 'blue'
+        #         t_style = 'filled'
+        #     else:
+        #         t_color = 'red'
+        #         t_style = 'dashed'
+
+        #     graph.edge(self.__transitions.loc[t,'st_node'],self.__transitions.loc[t,'end_node'],self.__transitions.loc[t,'event'], fontcolor = t_color, style = t_style)
+
+        for s_from in self.__states.index:
+            for s_to in self.__states.index:
+                transitions = self.__transitions[(self.__transitions['st_node'] == s_from) & (self.__transitions['end_node'] == s_to)]
+                events = self.__events.loc[transitions['event']]
+                cont = events[events['controllable'] == True]
+                not_cont = events[events['controllable'] == False]
+                if not cont.index.empty:
+                    separetor = ',\n'
+                    graph.edge(s_from, s_to, separetor.join(cont.index.values), fontcolor='blue')
+
+                if not not_cont.index.empty:
+                    separetor = ',\n'
+                    graph.edge(s_from, s_to, separetor.join(not_cont.index.values),fontcolor='red', style='dashed')
         
         graph.view(filename=self.__name,directory='output')      #Save Automaton as pdf file
 
@@ -161,6 +196,8 @@ class Automaton(object):
             event = self.__events[self.__events['event_id'] == event_id].index[0]   #Get event name
 
             self.insert_transition(source, dest, event)     #Insert the transition 
+        
+        self.export_automaton()
 
 #####----- GET methods: ------#####################################################################################    
     def get_name(self):
@@ -432,11 +469,8 @@ class Automaton(object):
         states_file.seek(0, os.SEEK_SET)                                # Move the cursor to first line
         content = states_file.read()                                    # Read the content of the file
 
-        if "from threading import Thread" not in content:
-            states_file.seek(0, os.SEEK_SET)
-            states_file.write("from threading import Thread\n")         # Insert importation of Thread
-        
         if "from handlers.EVENTS import" not in content:
+            states_file.seek(0, os.SEEK_SET)
             states_file.write("from handlers.EVENTS import *\n")         # Insert importation of Thread
         
         states_file.seek(0, os.SEEK_END)
@@ -450,12 +484,7 @@ class Automaton(object):
                 code = "def " + state                                       # Call for state
 
                 # if code not in content:
-                states_file.write("\n\n\t##### -- " + state.upper() + " call & handler -- ########################################")
-
-                # State call
-                states_file.write("\n\t" + code + "(param = None):")
-                states_file.write("\n\t\th = Thread(target=" + self.__name.replace(" ","_") + "." + state + "_handler, args=[param])")
-                states_file.write("\n\t\th.start()\n")
+                states_file.write("\n\n\t##### -- " + state.upper() + " handler -- ########################################")
 
                 #State handler
                 states_file.write("\n\t" + code + "_handler(param = None):")

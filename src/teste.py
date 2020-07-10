@@ -1,33 +1,16 @@
-from threading import Thread, Condition
+from graphviz import Digraph
 import time
 
-# cond = Condition()
+from lib.Automaton import Automaton, MultiAutomata
+from lib.StateMachine import StateMachine, Supervisor
+from handlers.EVENTS import *
 
-# def function(name):
-#     print('at function -->', name)
+# #### Create and Start one State Machine  #####################################
+# G1 = Automaton('approach')
+# G1.read_xml('files/approach.xml')
 
-# def thread(name):
-#     time.sleep(5)
-#     function(name)
+x = {}
+x['fill'] = 2
+x['bod'] = 3
 
-# t1 = Thread(target=thread,args=['t1'])
-# t2 = Thread(target=thread,args=['t2'])
-
-# t1.start()
-# t2.start()
-
-dic = {'a':True, 'b':False}
-print(dic)
-
-# dic = {x: 0 for x in dic}
-# print(dic)
-
-# if 'p' not in dic:
-#     dic['p'] = 0
-
-# print('p' in dic)
-# print(dic)
-
-# dic = {}
-
-print(all(dic.values()))
+print(x)

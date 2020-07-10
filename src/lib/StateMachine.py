@@ -1,5 +1,6 @@
 import pandas as pd
 from threading import Thread
+from multiprocessing import Process
 
 from lib.Automaton import Automaton
 from handlers.EVENTS import *
@@ -22,7 +23,9 @@ class StateMachine(Thread):
         current_state = states.loc[states['initial'] == True].index[0]                          # Get initial state
 
         # Call execution of the current node
-        eval(self.__name + "." + current_state)()
+        s = Process(target=eval(self.__name + "." + current_state + "_handler"), args=[None])
+        s.start()
+        last_s = s
 
         # Loop to control the State Machine
         while True:
@@ -62,8 +65,17 @@ class StateMachine(Thread):
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
                     print("\n[" + self.__name + "]: New state:  ", current_state)
 
+                    # Terminate the execution of the last node
+                    last_s.terminate()
+                    last_s.join()
+                    
                     # Call execution of the current node
-                    eval(self.__name + "." + current_state)()
+                    s = Process(target=eval(self.__name + "." + current_state + "_handler"), args=[None])
+                    s.start()
+
+                    # Print the automaton
+                    self.__SM.export_automaton(current_state)
+                    last_s = s
             else:
                 # print("The event '",event,"' does not exist on this SM!")
                 pass
