@@ -1,0 +1,14 @@
+// tele_start_condition
+digraph {
+	rankdir=LR
+	TELE_NOK [label=TELE_NOK color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	TELE_OK [label=TELE_OK color=black fillcolor=white shape=circle style=filled]
+	TELE_NOK -> TELE_NOK [label="end_tele,
+er_tele" fontcolor=red style=dashed]
+	TELE_NOK -> TELE_OK [label=req_assist fontcolor=blue]
+	TELE_NOK -> TELE_OK [label=call_tele fontcolor=red style=dashed]
+	TELE_OK -> TELE_NOK [label="end_tele,
+er_tele" fontcolor=red style=dashed]
+	TELE_OK -> TELE_OK [label=st_tele fontcolor=blue]
+	TELE_OK -> TELE_OK [label=call_tele fontcolor=red style=dashed]
+}

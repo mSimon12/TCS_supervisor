@@ -1,0 +1,15 @@
+// manouvers_vs_dependencies
+digraph {
+	rankdir=LR
+	VS_OFF [label=VS_OFF color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	VS_ON [label=VS_ON color=black fillcolor=white shape=doublecircle style=filled]
+	VS_OFF -> VS_ON [label=on_vs fontcolor=blue]
+	VS_ON -> VS_OFF [label=off_vs fontcolor=blue]
+	VS_ON -> VS_OFF [label=er_vs fontcolor=red style=dashed]
+	VS_ON -> VS_ON [label="st_app,
+st_exp,
+st_vsv,
+rsm_app,
+rsm_exp,
+rsm_vsv" fontcolor=blue]
+}

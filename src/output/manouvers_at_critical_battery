@@ -1,0 +1,19 @@
+// manouvers_at_critical_battery
+digraph {
+	rankdir=LR
+	BAT_DEAD [label=BAT_DEAD color=black fillcolor=white shape=circle style=filled]
+	BAT_NOT_DEAD [label=BAT_NOT_DEAD color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	BAT_DEAD -> BAT_DEAD [label=bat_LL fontcolor=red style=dashed]
+	BAT_DEAD -> BAT_NOT_DEAD [label=bat_L fontcolor=red style=dashed]
+	BAT_NOT_DEAD -> BAT_DEAD [label=bat_LL fontcolor=red style=dashed]
+	BAT_NOT_DEAD -> BAT_NOT_DEAD [label="st_app,
+st_exp,
+st_vsv,
+st_rb,
+rsm_app,
+rsm_exp,
+rsm_rb,
+rsm_vsv,
+move_to" fontcolor=blue]
+	BAT_NOT_DEAD -> BAT_NOT_DEAD [label=bat_L fontcolor=red style=dashed]
+}

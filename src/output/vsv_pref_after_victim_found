@@ -1,0 +1,17 @@
+// vsv_pref_after_victim_found
+digraph {
+	rankdir=LR
+	ALL_M [label=ALL_M color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	ONLY_VSV [label=ONLY_VSV color=black fillcolor=white shape=circle style=filled]
+	ALL_M -> ALL_M [label="st_app,
+st_exp,
+st_rb,
+st_vsv,
+rsm_app,
+rsm_exp,
+rsm_rb,
+move_to" fontcolor=blue]
+	ALL_M -> ONLY_VSV [label=victim_found fontcolor=red style=dashed]
+	ONLY_VSV -> ALL_M [label=st_vsv fontcolor=blue]
+	ONLY_VSV -> ONLY_VSV [label=victim_found fontcolor=red style=dashed]
+}

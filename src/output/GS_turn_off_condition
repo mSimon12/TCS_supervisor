@@ -1,0 +1,21 @@
+// GS_turn_off_condition
+digraph {
+	rankdir=LR
+	Mi_OFF [label=Mi_OFF color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	Mi_ON [label=Mi_ON color=black fillcolor=white shape=doublecircle style=filled]
+	Mi_OFF -> Mi_OFF [label=off_gs fontcolor=blue]
+	Mi_OFF -> Mi_OFF [label="end_exp,
+end_vsv,
+er_exp,
+er_vsv" fontcolor=red style=dashed]
+	Mi_OFF -> Mi_ON [label="st_exp,
+st_vsv,
+rsm_exp,
+rsm_vsv" fontcolor=blue]
+	Mi_ON -> Mi_OFF [label="sus_exp,
+sus_vsv" fontcolor=blue]
+	Mi_ON -> Mi_OFF [label="end_exp,
+end_vsv,
+er_exp,
+er_vsv" fontcolor=red style=dashed]
+}

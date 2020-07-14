@@ -1,0 +1,29 @@
+// motion_assist_request
+digraph {
+	rankdir=LR
+	ASSIST_ALLOWED [label=ASSIST_ALLOWED color=black fillcolor=white shape=circle style=filled]
+	NO_ASSIT [label=NO_ASSIT color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	ASSIST_ALLOWED -> ASSIST_ALLOWED [label=req_assist fontcolor=blue]
+	ASSIST_ALLOWED -> ASSIST_ALLOWED [label="er_app,
+er_exp,
+er_rb,
+er_vsv" fontcolor=red style=dashed]
+	ASSIST_ALLOWED -> NO_ASSIT [label="rst_app,
+rst_exp,
+rst_rb,
+rst_vsv,
+rst_tele" fontcolor=blue]
+	ASSIST_ALLOWED -> NO_ASSIT [label="end_tele,
+er_tele" fontcolor=red style=dashed]
+	NO_ASSIT -> ASSIST_ALLOWED [label="er_app,
+er_exp,
+er_rb,
+er_vsv" fontcolor=red style=dashed]
+	NO_ASSIT -> NO_ASSIT [label="rst_app,
+rst_exp,
+rst_rb,
+rst_vsv,
+rst_tele" fontcolor=blue]
+	NO_ASSIT -> NO_ASSIT [label="end_tele,
+er_tele" fontcolor=red style=dashed]
+}

@@ -1,0 +1,12 @@
+// sensors_at_critical_battery
+digraph {
+	rankdir=LR
+	BAT_DEAD [label=BAT_DEAD color=black fillcolor=white shape=circle style=filled]
+	BAT_NOT_DEAD [label=BAT_NOT_DEAD color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	BAT_DEAD -> BAT_DEAD [label=bat_LL fontcolor=red style=dashed]
+	BAT_DEAD -> BAT_NOT_DEAD [label=bat_L fontcolor=red style=dashed]
+	BAT_NOT_DEAD -> BAT_DEAD [label=bat_LL fontcolor=red style=dashed]
+	BAT_NOT_DEAD -> BAT_NOT_DEAD [label="on_vs,
+on_gs" fontcolor=blue]
+	BAT_NOT_DEAD -> BAT_NOT_DEAD [label=bat_L fontcolor=red style=dashed]
+}

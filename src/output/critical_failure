@@ -1,0 +1,20 @@
+// critical_failure
+digraph {
+	rankdir=LR
+	M_FAIL [label=M_FAIL color=black fillcolor=white shape=circle style=filled]
+	M_OK [label=M_OK color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	M_FAIL -> M_FAIL [label=critic_fail fontcolor=red style=dashed]
+	M_FAIL -> M_OK [label=rst_f fontcolor=blue]
+	M_OK -> M_FAIL [label=critic_fail fontcolor=red style=dashed]
+	M_OK -> M_OK [label="st_app,
+st_exp,
+st_rb,
+st_tele,
+st_vsv,
+rsm_app,
+rsm_exp,
+rsm_rb,
+rsm_vsv,
+move_to,
+rst_f" fontcolor=blue]
+}

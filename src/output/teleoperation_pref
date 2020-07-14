@@ -1,0 +1,21 @@
+// teleoperation_pref
+digraph {
+	rankdir=LR
+	AUTO [label=AUTO color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	TELE [label=TELE color=black fillcolor=white shape=circle style=filled]
+	AUTO -> AUTO [label="st_app,
+st_exp,
+st_rb,
+st_vsv,
+rsm_app,
+rsm_exp,
+rsm_rb,
+rsm_vsv,
+move_to" fontcolor=blue]
+	AUTO -> AUTO [label=end_tele fontcolor=red style=dashed]
+	AUTO -> TELE [label=req_assist fontcolor=blue]
+	AUTO -> TELE [label=call_tele fontcolor=red style=dashed]
+	TELE -> AUTO [label="end_tele,
+er_tele" fontcolor=red style=dashed]
+	TELE -> TELE [label=call_tele fontcolor=red style=dashed]
+}

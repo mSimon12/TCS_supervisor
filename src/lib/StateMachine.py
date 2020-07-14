@@ -3,8 +3,9 @@ from threading import Thread
 from multiprocessing import Process
 
 from lib.Automaton import Automaton
+from lib.EventDispatcher import g_var
 from handlers.EVENTS import *
-from handlers.STATES import *
+# from handlers.STATES import *
 
 ######################################################################################################### 
 class StateMachine(Thread):
@@ -18,29 +19,33 @@ class StateMachine(Thread):
 
     def run(self):
         states = self.__SM.get_states()                                                         # Get the states of the Automaton
+        events = self.__SM.get_events()                                                         # Get the events of the Supervisor
         alpha = self.__SM.get_alphabet()                                                        # Get the events of the Automaton
         trans = self.__SM.get_transitions()                                                     # Get the alphabet of the Automaton
         current_state = states.loc[states['initial'] == True].index[0]                          # Get initial state
 
-        # Call execution of the current node
-        s = Process(target=eval(self.__name + "." + current_state + "_handler"), args=[None])
-        s.start()
-        last_s = s
+
+        ######################################################################################
+        # Call execution of the initial node
+        # s = Process(target=eval(self.__name + "." + current_state + "_handler"), args=[None])
+        # s.start()
+        # last_s = s
+        ######################################################################################
 
         # Loop to control the State Machine
         while True:
             # Enable and disable events
             for e in alpha:
-                if trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty:
-                    # Disable event
-                    eval(e).set_status(self.__name, False)
-                else:
+                if (not trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty) or (events.loc[e,'controllable'] == False):
                     # Enable event
                     eval(e).set_status(self.__name, True)
+                else:
+                    # Disable event
+                    eval(e).set_status(self.__name, False)
 
             # Inform event monitor that the SM is updated
             g_var.SM_mutex.acquire()
-            g_var.SM_status[self.__name] = True
+            g_var.SM_status[self.__name] = True                 # Signal that the status have been updated
             g_var.SM_mutex.notify()
 
             # Acquire access to the event section
@@ -52,7 +57,7 @@ class StateMachine(Thread):
             try:
                 g_var.req_SM_update.wait()                          # Wait the occurence of a new event
             except RuntimeError:
-                print("[" + self.__name + "]: ERROR: Unable to wait new event!")
+                print("[SM - " + self.__name + "]: ERROR: Unable to wait new event!")
             
             event = g_var.last_event                                # Get the last occured event
 
@@ -60,22 +65,24 @@ class StateMachine(Thread):
             if event in alpha:
                 # Verify if the event trigger a transition
                 if trans[(trans['st_node'] == current_state) & (trans['event'] == event)].empty:
-                    print("[" + self.__name + "]: ALERT!!!!\tThis transition should not have occured!")
+                    print("[SM - " + self.__name + "]: ALERT!!!!\tThis transition should not have occured!")
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
-                    print("\n[" + self.__name + "]: New state:  ", current_state)
+                    print("[SM - " + self.__name + "]: New state:  ", current_state)
 
+                    ######################################################################################
                     # Terminate the execution of the last node
-                    last_s.terminate()
-                    last_s.join()
+                    # last_s.terminate()
+                    # last_s.join()
                     
-                    # Call execution of the current node
-                    s = Process(target=eval(self.__name + "." + current_state + "_handler"), args=[None])
-                    s.start()
+                    # # Call execution of the current node
+                    # s = Process(target=eval(self.__name + "." + current_state + "_handler"), args=[None])
+                    # s.start()
+                    ######################################################################################
 
                     # Print the automaton
                     self.__SM.export_automaton(current_state)
-                    last_s = s
+                    # last_s = s
             else:
                 # print("The event '",event,"' does not exist on this SM!")
                 pass
@@ -113,7 +120,7 @@ class Supervisor(Thread):
 
             # Inform event monitor that the SM is updated
             g_var.SM_mutex.acquire()
-            g_var.SM_status[self.__name] = True
+            g_var.SM_status[self.__name] = True                 # Signal that the status have been updated
             g_var.SM_mutex.notify()
 
             # Acquire access to the event section
@@ -125,7 +132,7 @@ class Supervisor(Thread):
             try:
                 g_var.req_SM_update.wait()                          # Wait the occurence of a new event
             except RuntimeError:
-                print("[" + self.__name + "]: ERROR: Unable to wait new event!")
+                print("[SUP - " + self.__name + "]: ERROR: Unable to wait new event!")
             
             event = g_var.last_event                                # Get the last occured event
 
@@ -133,10 +140,13 @@ class Supervisor(Thread):
             if event in alpha:
                 # Verify if the event trigger a transition
                 if trans[(trans['st_node'] == current_state) & (trans['event'] == event)].empty:
-                    print("[" + self.__name + "]: ALERT!!!!\tThis transition should not have occured!")
+                    print("[SUP - " + self.__name + "]: ALERT!!!!\tThis transition should not have occured!")
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
-                    print("\n[" + self.__name + "]: New state:  ", current_state)
+                    print("[SUP - " + self.__name + "]: New state:  ", current_state)
+
+                # Print the automaton
+                self.__SUP.export_automaton(current_state)
             else:
                 # print("The event '",event,"' does not exist on this SUP!")
                 pass

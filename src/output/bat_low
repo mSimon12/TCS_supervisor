@@ -1,0 +1,40 @@
+// bat_low
+digraph {
+	rankdir=LR
+	S0 [label=S0 color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	S1 [label=S1 color=black fillcolor=white shape=circle style=filled]
+	S2 [label=S2 color=black fillcolor=white shape=circle style=filled]
+	S3 [label=S3 color=black fillcolor=white shape=circle style=filled]
+	S0 -> S0 [label="st_app,
+st_exp,
+rsm_app,
+rsm_exp" fontcolor=blue]
+	S0 -> S0 [label="bat_LL,
+bat_OK,
+rb_pref" fontcolor=red style=dashed]
+	S0 -> S1 [label=bat_L fontcolor=red style=dashed]
+	S0 -> S3 [label=no_rb_pref fontcolor=red style=dashed]
+	S1 -> S0 [label="bat_OK,
+bat_LL" fontcolor=red style=dashed]
+	S1 -> S1 [label="rb_pref,
+bat_L" fontcolor=red style=dashed]
+	S1 -> S2 [label=no_rb_pref fontcolor=red style=dashed]
+	S2 -> S1 [label=rb_pref fontcolor=red style=dashed]
+	S2 -> S2 [label="st_app,
+st_exp,
+rsm_app,
+rsm_exp" fontcolor=blue]
+	S2 -> S2 [label="no_rb_pref,
+bat_L" fontcolor=red style=dashed]
+	S2 -> S3 [label="bat_OK,
+bat_LL" fontcolor=red style=dashed]
+	S3 -> S0 [label=rb_pref fontcolor=red style=dashed]
+	S3 -> S2 [label=bat_L fontcolor=red style=dashed]
+	S3 -> S3 [label="st_app,
+st_exp,
+rsm_app,
+rsm_exp" fontcolor=blue]
+	S3 -> S3 [label="bat_LL,
+bat_OK,
+no_rb_pref" fontcolor=red style=dashed]
+}

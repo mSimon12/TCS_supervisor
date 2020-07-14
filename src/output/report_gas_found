@@ -1,0 +1,10 @@
+// report_gas_found
+digraph {
+	rankdir=LR
+	G_TO_REPORT [label=G_TO_REPORT color=black fillcolor=white shape=circle style=filled]
+	NO_G [label=NO_G color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	G_TO_REPORT -> G_TO_REPORT [label=gas_found fontcolor=red style=dashed]
+	G_TO_REPORT -> NO_G [label=rep_gas fontcolor=blue]
+	NO_G -> G_TO_REPORT [label=gas_found fontcolor=red style=dashed]
+	NO_G -> NO_G [label=move_to fontcolor=blue]
+}

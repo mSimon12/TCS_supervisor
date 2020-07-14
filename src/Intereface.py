@@ -1,10 +1,11 @@
+from threading import Thread
 import PySimpleGUI as sg
 import ast
 
-class TelaPython(object):
+class EventInterface(Thread):
 
     def __init__(self):
-
+        Thread.__init__(self)  
         filename = 'handlers/STATES.py'
         with open(filename) as file:
             node = ast.parse(file.read())
@@ -12,7 +13,6 @@ class TelaPython(object):
         machines = [] 
         for c in classes:
             machines.append(c.name)
-        print(machines)
 
         #Layout
         layout =[ 
@@ -24,16 +24,17 @@ class TelaPython(object):
         self.janela = sg.Window("State Machine visualizer", size=(1000,500)).layout(layout)
         
         
-    def Iniciar(self):
+    def run(self):
         while True:
             #Extrair os dados da tela
             event, values = self.janela.Read(timeout=1)
             if event in (None, 'Cancel'):   # if user closes window or clicks cancel
+                print('\n\nending....................\n\n')
                 break
+            
+            #Update the Automaton
             try:
                 self.janela.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
             except:
                 pass
-
-tela = TelaPython()
-tela.Iniciar()
+        self.janela.Close()

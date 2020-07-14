@@ -1,0 +1,10 @@
+// report_victim_found
+digraph {
+	rankdir=LR
+	NO_V [label=NO_V color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	V_TO_REPORT [label=V_TO_REPORT color=black fillcolor=white shape=circle style=filled]
+	NO_V -> NO_V [label=move_to fontcolor=blue]
+	NO_V -> V_TO_REPORT [label=victim_found fontcolor=red style=dashed]
+	V_TO_REPORT -> NO_V [label=rep_victim fontcolor=blue]
+	V_TO_REPORT -> V_TO_REPORT [label=victim_found fontcolor=red style=dashed]
+}

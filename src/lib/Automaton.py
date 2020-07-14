@@ -231,13 +231,13 @@ class Automaton(object):
             Insert new node into the Supervisor automaton:
                 node_name: UPPER_CASE name
         '''
-        if not node_name.isupper():
-            print("Incorrect node name. It must be upper_case!")
+        # if not node_name.isupper():
+        #     print("Incorrect node name. It must be upper_case!")
+        # else:
+        if node_name not in self.__states.index:
+            self.__states.loc[node_name] = [idt, initial, accepting]
         else:
-            if node_name not in self.__states.index:
-                self.__states.loc[node_name] = [idt, initial, accepting]
-            else:
-                print("There is already a node called \'", node_name,"\'")
+            print("There is already a node called \'", node_name,"\'")
 
 
     def remove_state(self, node_name):
@@ -270,7 +270,7 @@ class Automaton(object):
         else:
             print("Error: Inexistent node!")
 
-#### #----- EVENTS methods: -----###################################################################################
+#####----- EVENTS methods: -----###################################################################################
     def show_events(self):
         '''
             Show the events that belong to the Supervisor.
@@ -287,15 +287,15 @@ class Automaton(object):
                 event_name: LOWER_CASE name
         '''
 
-        if event_name.isupper():
-            print("Incorrect event name. It must be lower_case!")
-        else:
-            if event_name not in self.__events:
-                self.__events.loc[event_name] = [idt, controllable, 0]              #Add a new event with counter of transitions = 0
+        # if event_name.isupper():
+        #     print("Incorrect event name. It must be lower_case!")
+        # else:
+        if event_name not in self.__events:
+            self.__events.loc[event_name] = [idt, controllable, 0]          #Add a new event with counter of transitions = 0
 
-                self.__alphabet.add(event_name)                                 #Add the new event to the alphabet
-            else:
-                print("There is already a event called \'",event_name,"\'")
+            self.__alphabet.add(event_name)                                 #Add the new event to the alphabet
+        else:
+            print("There is already a event called \'",event_name,"\'")
 
 
     def remove_event(self, event_name):
@@ -372,57 +372,18 @@ class Automaton(object):
         events_file.seek(0, os.SEEK_SET)                         # Move the cursor to first line
         content = events_file.read()                             # Read the content of the file
 
-        # Insert importation of Thread
-        if "from threading import Thread" not in content:
+        # Insert importation of EventDispatcher
+        if "from lib.EventDispatcher import trigger_event" not in content:
             events_file.seek(0, os.SEEK_SET)
-            events_file.write("from threading import Thread, Condition\n")                      
-        
-        # Insert global variables and mutexes
-        if "class g_var:" not in content:
-            events_file.write("\n# Global variables and mutexes")
-            events_file.write("\nclass g_var:")
-            events_file.write("\n\tSM_status = {}")
-            events_file.write("\n\tSM_mutex = Condition()")
-            events_file.write("\n\tlast_event = None")
-            events_file.write("\n\treq_SM_update = Condition()") 
-
-        # Insert general event caller
-        if "def trigger_event" not in content:
-            events_file.write("\n\n##### -- General event caller -- ########################################")
-            events_file.write("\ndef trigger_event(event, handler, param):")
-            events_file.write("\n\t'''\n\t\tTrigger event handler and notify State Machines about the event occured.\n\t'''")
-            
-            events_file.write("\n\tg_var.SM_mutex.acquire()")
-            events_file.write("\n\t#Verify if all Machines are updated")
-            events_file.write("\n\twhile (not all(g_var.SM_status.values()) or (not bool(g_var.SM_status))):")
-            events_file.write("\n\t\tg_var.SM_mutex.wait()\n")
-
-            events_file.write("\n\t#Verify if all SM enable this event")	
-            events_file.write("\n\tg_var.req_SM_update.acquire()")
-            events_file.write("\n\tif eval(event).get_status() == True:")
-            events_file.write("\n\t\tg_var.SM_status = {x: False for x in g_var.SM_status}	# Clear all SM status")
-            events_file.write("\n\t\tg_var.last_event = event")  
-            events_file.write("\n\t\th = Thread(target=handler, args=[param])")
-            events_file.write("\n\t\th.start()")
-            events_file.write("\n\t\th.join()")
-            events_file.write("\n\n\t\t# Notify State Machines the need of update")
-            events_file.write("\n\t\ttry:")
-            events_file.write("\n\t\t\tg_var.req_SM_update.notifyAll()")
-            events_file.write("\n\t\texcept RuntimeError:")
-            events_file.write("\n\t\t\tprint('ERROR: Unable to notify new event!')")
-            events_file.write("\n\telse:")
-            events_file.write("\n\t\tprint(event, ' not enabled!')")
-            events_file.write("\n\tg_var.req_SM_update.release()")
-            events_file.write("\n\tg_var.SM_mutex.release()")
-          
+            events_file.write("from lib.EventDispatcher import trigger_event\n")    
         events_file.seek(0, os.SEEK_END)
 
         #Verify presence of each event and insert if not already defined
         for event in self.__events.index:
-            code = "class " + event + ":"                                       # Call for event
+            code = "class " + event + "(object):"                                       # Call for event
 
             if code not in content:
-                events_file.write("\n\n\n##### -- " + event + " call & handler -- ########################################")
+                events_file.write("\n##### -- " + event + " call & handler -- ########################################")
                 
                 # Event class
                 events_file.write("\n" + code)  
@@ -431,23 +392,28 @@ class Automaton(object):
                 events_file.write("\n\t__enabled = {}")
 
                 # Insert event call
-                events_file.write("\n\n\tdef call(param = None):")
-                events_file.write("\n\t\ttrigger_event('" + event + "', " + event + ".__handler, param)")
+                
+                events_file.write("\n\n\t@classmethod")
+                events_file.write("\n\tdef call(cls, param = None):")
+                events_file.write("\n\t\ttrigger_event('" + event + "', " + event + ", param)")
 
                 # Insert event handler
-                events_file.write("\n\n\tdef __handler(param = None):")
+                events_file.write("\n\n\t@classmethod")
+                events_file.write("\n\tdef handler(cls, param = None):")
                 events_file.write("\n\t\t#Write code here...")
                 events_file.write("\n\t\tprint('Executing event "+ event +"...')")
                 events_file.write("\n\t\tpass")
 
                 # Insert get status function
-                events_file.write("\n\n\tdef get_status():")
+                events_file.write("\n\n\t@classmethod")
+                events_file.write("\n\tdef get_status(cls):")
                 events_file.write("\n\t\t'''\n\t\tTrue: event enabled;\n\t\tFalse: event not allowed.\n\t\t'''")
                 events_file.write("\n\t\treturn all(" + event + ".__enabled.values())")
 
                 #Insert set status function
-                events_file.write("\n\n\tdef set_status(name, status):")
-                events_file.write("\n\t\t" + event +".__enabled[name] = status")
+                events_file.write("\n\n\t@classmethod")
+                events_file.write("\n\tdef set_status(cls, name, status):")
+                events_file.write("\n\t\t" + event +".__enabled[name] = status\n\n")
 
         events_file.close()                                             
 
@@ -465,18 +431,12 @@ class Automaton(object):
                 if exc.errno != errno.EEXIST:
                     raise
         states_file = open(filename, "a+")                                  # Open the file with the states handlers
-        states_file.seek(0, os.SEEK_SET)                                # Move the cursor to first line
-        content = states_file.read()                                    # Read the content of the file
+        states_file.seek(0, os.SEEK_SET)                                    # Move the cursor to first line
+        content = states_file.read()                                        # Read the content of the file
 
-        if "from handlers.EVENTS import" not in content:
-            states_file.seek(0, os.SEEK_SET)
-            states_file.write("from handlers.EVENTS import *\n")         # Insert importation of Thread
-        
-        states_file.seek(0, os.SEEK_END)
-
-        class_name = "class " + self.__name.replace(" ","_") + ":"
+        class_name = "class " + self.__name.replace(" ","_") + "(object):"
         if class_name not in content:
-            states_file.write("\n\n" + class_name)
+            states_file.write("\n" + class_name)
 
             #Insert states
             for state in self.__states.index:
@@ -486,8 +446,10 @@ class Automaton(object):
                 states_file.write("\n\n\t##### -- " + state.upper() + " handler -- ########################################")
 
                 #State handler
-                states_file.write("\n\t" + code + "_handler(param = None):")
+                states_file.write("\n\t@classmethod")
+                states_file.write("\n\t" + code + "_handler(self, param = None):")
                 states_file.write("\n\t\t#Write code here...")
-                states_file.write("\n\t\tprint('State " + state + " running ...')")
+                # states_file.write("\n\t\tprint('State " + state + " running ...')")
                 states_file.write("\n\t\tpass")
+            states_file.write("\n\n")
             states_file.close()                                             # Close the access to the file
