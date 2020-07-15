@@ -3,6 +3,7 @@ from lib.EventDispatcher import trigger_event
 ##### -- abort_app call & handler -- ########################################
 class abort_app(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -23,6 +24,10 @@ class abort_app(object):
 		return all(abort_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return abort_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		abort_app.__enabled[name] = status
 
@@ -30,6 +35,7 @@ class abort_app(object):
 ##### -- end_app call & handler -- ########################################
 class end_app(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -50,6 +56,10 @@ class end_app(object):
 		return all(end_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return end_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		end_app.__enabled[name] = status
 
@@ -57,6 +67,7 @@ class end_app(object):
 ##### -- er_app call & handler -- ########################################
 class er_app(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -77,6 +88,10 @@ class er_app(object):
 		return all(er_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_app.__enabled[name] = status
 
@@ -84,6 +99,7 @@ class er_app(object):
 ##### -- rsm_app call & handler -- ########################################
 class rsm_app(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -104,6 +120,10 @@ class rsm_app(object):
 		return all(rsm_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rsm_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rsm_app.__enabled[name] = status
 
@@ -111,6 +131,7 @@ class rsm_app(object):
 ##### -- rst_app call & handler -- ########################################
 class rst_app(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -131,6 +152,10 @@ class rst_app(object):
 		return all(rst_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_app.__enabled[name] = status
 
@@ -138,6 +163,7 @@ class rst_app(object):
 ##### -- st_app call & handler -- ########################################
 class st_app(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -158,6 +184,10 @@ class st_app(object):
 		return all(st_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return st_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		st_app.__enabled[name] = status
 
@@ -165,6 +195,7 @@ class st_app(object):
 ##### -- sus_app call & handler -- ########################################
 class sus_app(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -185,6 +216,10 @@ class sus_app(object):
 		return all(sus_app.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return sus_app.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		sus_app.__enabled[name] = status
 
@@ -192,6 +227,7 @@ class sus_app(object):
 ##### -- bat_L call & handler -- ########################################
 class bat_L(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -212,6 +248,10 @@ class bat_L(object):
 		return all(bat_L.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return bat_L.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		bat_L.__enabled[name] = status
 
@@ -219,6 +259,7 @@ class bat_L(object):
 ##### -- bat_LL call & handler -- ########################################
 class bat_LL(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -239,6 +280,10 @@ class bat_LL(object):
 		return all(bat_LL.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return bat_LL.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		bat_LL.__enabled[name] = status
 
@@ -246,6 +291,7 @@ class bat_LL(object):
 ##### -- bat_OK call & handler -- ########################################
 class bat_OK(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -266,6 +312,10 @@ class bat_OK(object):
 		return all(bat_OK.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return bat_OK.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		bat_OK.__enabled[name] = status
 
@@ -273,6 +323,7 @@ class bat_OK(object):
 ##### -- call_tele call & handler -- ########################################
 class call_tele(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -293,6 +344,10 @@ class call_tele(object):
 		return all(call_tele.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return call_tele.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		call_tele.__enabled[name] = status
 
@@ -300,6 +355,7 @@ class call_tele(object):
 ##### -- no_rb_pref call & handler -- ########################################
 class no_rb_pref(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -320,6 +376,10 @@ class no_rb_pref(object):
 		return all(no_rb_pref.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return no_rb_pref.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		no_rb_pref.__enabled[name] = status
 
@@ -327,6 +387,7 @@ class no_rb_pref(object):
 ##### -- rb_pref call & handler -- ########################################
 class rb_pref(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -347,6 +408,10 @@ class rb_pref(object):
 		return all(rb_pref.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rb_pref.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rb_pref.__enabled[name] = status
 
@@ -354,6 +419,7 @@ class rb_pref(object):
 ##### -- rep_gas call & handler -- ########################################
 class rep_gas(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -374,6 +440,10 @@ class rep_gas(object):
 		return all(rep_gas.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rep_gas.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rep_gas.__enabled[name] = status
 
@@ -381,6 +451,7 @@ class rep_gas(object):
 ##### -- rep_victim call & handler -- ########################################
 class rep_victim(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -401,6 +472,10 @@ class rep_victim(object):
 		return all(rep_victim.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rep_victim.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rep_victim.__enabled[name] = status
 
@@ -408,6 +483,7 @@ class rep_victim(object):
 ##### -- req_assist call & handler -- ########################################
 class req_assist(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -428,6 +504,10 @@ class req_assist(object):
 		return all(req_assist.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return req_assist.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		req_assist.__enabled[name] = status
 
@@ -435,6 +515,7 @@ class req_assist(object):
 ##### -- abort_exp call & handler -- ########################################
 class abort_exp(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -455,6 +536,10 @@ class abort_exp(object):
 		return all(abort_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return abort_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		abort_exp.__enabled[name] = status
 
@@ -462,6 +547,7 @@ class abort_exp(object):
 ##### -- end_exp call & handler -- ########################################
 class end_exp(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -482,6 +568,10 @@ class end_exp(object):
 		return all(end_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return end_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		end_exp.__enabled[name] = status
 
@@ -489,6 +579,7 @@ class end_exp(object):
 ##### -- er_exp call & handler -- ########################################
 class er_exp(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -509,6 +600,10 @@ class er_exp(object):
 		return all(er_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_exp.__enabled[name] = status
 
@@ -516,6 +611,7 @@ class er_exp(object):
 ##### -- rsm_exp call & handler -- ########################################
 class rsm_exp(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -536,6 +632,10 @@ class rsm_exp(object):
 		return all(rsm_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rsm_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rsm_exp.__enabled[name] = status
 
@@ -543,6 +643,7 @@ class rsm_exp(object):
 ##### -- rst_exp call & handler -- ########################################
 class rst_exp(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -563,6 +664,10 @@ class rst_exp(object):
 		return all(rst_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_exp.__enabled[name] = status
 
@@ -570,6 +675,7 @@ class rst_exp(object):
 ##### -- st_exp call & handler -- ########################################
 class st_exp(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -590,6 +696,10 @@ class st_exp(object):
 		return all(st_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return st_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		st_exp.__enabled[name] = status
 
@@ -597,6 +707,7 @@ class st_exp(object):
 ##### -- sus_exp call & handler -- ########################################
 class sus_exp(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -617,6 +728,10 @@ class sus_exp(object):
 		return all(sus_exp.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return sus_exp.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		sus_exp.__enabled[name] = status
 
@@ -624,6 +739,7 @@ class sus_exp(object):
 ##### -- critic_fail call & handler -- ########################################
 class critic_fail(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -644,6 +760,10 @@ class critic_fail(object):
 		return all(critic_fail.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return critic_fail.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		critic_fail.__enabled[name] = status
 
@@ -651,6 +771,7 @@ class critic_fail(object):
 ##### -- fail call & handler -- ########################################
 class fail(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -671,6 +792,10 @@ class fail(object):
 		return all(fail.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return fail.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		fail.__enabled[name] = status
 
@@ -678,6 +803,7 @@ class fail(object):
 ##### -- pos_fail call & handler -- ########################################
 class pos_fail(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -698,6 +824,10 @@ class pos_fail(object):
 		return all(pos_fail.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return pos_fail.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		pos_fail.__enabled[name] = status
 
@@ -705,6 +835,7 @@ class pos_fail(object):
 ##### -- rst_f call & handler -- ########################################
 class rst_f(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -725,6 +856,10 @@ class rst_f(object):
 		return all(rst_f.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_f.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_f.__enabled[name] = status
 
@@ -732,6 +867,7 @@ class rst_f(object):
 ##### -- er_gs call & handler -- ########################################
 class er_gs(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -752,6 +888,10 @@ class er_gs(object):
 		return all(er_gs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_gs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_gs.__enabled[name] = status
 
@@ -759,6 +899,7 @@ class er_gs(object):
 ##### -- gas_found call & handler -- ########################################
 class gas_found(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -779,6 +920,10 @@ class gas_found(object):
 		return all(gas_found.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return gas_found.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		gas_found.__enabled[name] = status
 
@@ -786,6 +931,7 @@ class gas_found(object):
 ##### -- off_gs call & handler -- ########################################
 class off_gs(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -806,6 +952,10 @@ class off_gs(object):
 		return all(off_gs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return off_gs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		off_gs.__enabled[name] = status
 
@@ -813,6 +963,7 @@ class off_gs(object):
 ##### -- on_gs call & handler -- ########################################
 class on_gs(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -833,6 +984,10 @@ class on_gs(object):
 		return all(on_gs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return on_gs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		on_gs.__enabled[name] = status
 
@@ -840,6 +995,7 @@ class on_gs(object):
 ##### -- rst_gs call & handler -- ########################################
 class rst_gs(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -860,6 +1016,10 @@ class rst_gs(object):
 		return all(rst_gs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_gs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_gs.__enabled[name] = status
 
@@ -867,6 +1027,7 @@ class rst_gs(object):
 ##### -- move_to call & handler -- ########################################
 class move_to(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -887,6 +1048,10 @@ class move_to(object):
 		return all(move_to.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return move_to.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		move_to.__enabled[name] = status
 
@@ -894,6 +1059,7 @@ class move_to(object):
 ##### -- abort_rb call & handler -- ########################################
 class abort_rb(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -914,6 +1080,10 @@ class abort_rb(object):
 		return all(abort_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return abort_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		abort_rb.__enabled[name] = status
 
@@ -921,6 +1091,7 @@ class abort_rb(object):
 ##### -- end_rb call & handler -- ########################################
 class end_rb(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -941,6 +1112,10 @@ class end_rb(object):
 		return all(end_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return end_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		end_rb.__enabled[name] = status
 
@@ -948,6 +1123,7 @@ class end_rb(object):
 ##### -- er_rb call & handler -- ########################################
 class er_rb(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -968,6 +1144,10 @@ class er_rb(object):
 		return all(er_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_rb.__enabled[name] = status
 
@@ -975,6 +1155,7 @@ class er_rb(object):
 ##### -- rsm_rb call & handler -- ########################################
 class rsm_rb(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -995,6 +1176,10 @@ class rsm_rb(object):
 		return all(rsm_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rsm_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rsm_rb.__enabled[name] = status
 
@@ -1002,6 +1187,7 @@ class rsm_rb(object):
 ##### -- rst_rb call & handler -- ########################################
 class rst_rb(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1022,6 +1208,10 @@ class rst_rb(object):
 		return all(rst_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_rb.__enabled[name] = status
 
@@ -1029,6 +1219,7 @@ class rst_rb(object):
 ##### -- st_rb call & handler -- ########################################
 class st_rb(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1049,6 +1240,10 @@ class st_rb(object):
 		return all(st_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return st_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		st_rb.__enabled[name] = status
 
@@ -1056,6 +1251,7 @@ class st_rb(object):
 ##### -- sus_rb call & handler -- ########################################
 class sus_rb(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1076,6 +1272,10 @@ class sus_rb(object):
 		return all(sus_rb.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return sus_rb.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		sus_rb.__enabled[name] = status
 
@@ -1083,6 +1283,7 @@ class sus_rb(object):
 ##### -- end_tele call & handler -- ########################################
 class end_tele(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1103,6 +1304,10 @@ class end_tele(object):
 		return all(end_tele.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return end_tele.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		end_tele.__enabled[name] = status
 
@@ -1110,6 +1315,7 @@ class end_tele(object):
 ##### -- er_tele call & handler -- ########################################
 class er_tele(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1130,6 +1336,10 @@ class er_tele(object):
 		return all(er_tele.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_tele.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_tele.__enabled[name] = status
 
@@ -1137,6 +1347,7 @@ class er_tele(object):
 ##### -- rst_tele call & handler -- ########################################
 class rst_tele(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1157,6 +1368,10 @@ class rst_tele(object):
 		return all(rst_tele.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_tele.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_tele.__enabled[name] = status
 
@@ -1164,6 +1379,7 @@ class rst_tele(object):
 ##### -- st_tele call & handler -- ########################################
 class st_tele(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1184,6 +1400,10 @@ class st_tele(object):
 		return all(st_tele.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return st_tele.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		st_tele.__enabled[name] = status
 
@@ -1191,6 +1411,7 @@ class st_tele(object):
 ##### -- abort_vsv call & handler -- ########################################
 class abort_vsv(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1211,6 +1432,10 @@ class abort_vsv(object):
 		return all(abort_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return abort_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		abort_vsv.__enabled[name] = status
 
@@ -1218,6 +1443,7 @@ class abort_vsv(object):
 ##### -- end_vsv call & handler -- ########################################
 class end_vsv(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1238,6 +1464,10 @@ class end_vsv(object):
 		return all(end_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return end_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		end_vsv.__enabled[name] = status
 
@@ -1245,6 +1475,7 @@ class end_vsv(object):
 ##### -- er_vsv call & handler -- ########################################
 class er_vsv(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1265,6 +1496,10 @@ class er_vsv(object):
 		return all(er_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_vsv.__enabled[name] = status
 
@@ -1272,6 +1507,7 @@ class er_vsv(object):
 ##### -- rsm_vsv call & handler -- ########################################
 class rsm_vsv(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1292,6 +1528,10 @@ class rsm_vsv(object):
 		return all(rsm_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rsm_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rsm_vsv.__enabled[name] = status
 
@@ -1299,6 +1539,7 @@ class rsm_vsv(object):
 ##### -- rst_vsv call & handler -- ########################################
 class rst_vsv(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1319,6 +1560,10 @@ class rst_vsv(object):
 		return all(rst_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_vsv.__enabled[name] = status
 
@@ -1326,6 +1571,7 @@ class rst_vsv(object):
 ##### -- st_vsv call & handler -- ########################################
 class st_vsv(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1346,6 +1592,10 @@ class st_vsv(object):
 		return all(st_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return st_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		st_vsv.__enabled[name] = status
 
@@ -1353,6 +1603,7 @@ class st_vsv(object):
 ##### -- sus_vsv call & handler -- ########################################
 class sus_vsv(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1373,6 +1624,10 @@ class sus_vsv(object):
 		return all(sus_vsv.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return sus_vsv.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		sus_vsv.__enabled[name] = status
 
@@ -1380,6 +1635,7 @@ class sus_vsv(object):
 ##### -- er_vs call & handler -- ########################################
 class er_vs(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1400,6 +1656,10 @@ class er_vs(object):
 		return all(er_vs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return er_vs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		er_vs.__enabled[name] = status
 
@@ -1407,6 +1667,7 @@ class er_vs(object):
 ##### -- off_vs call & handler -- ########################################
 class off_vs(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1427,6 +1688,10 @@ class off_vs(object):
 		return all(off_vs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return off_vs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		off_vs.__enabled[name] = status
 
@@ -1434,6 +1699,7 @@ class off_vs(object):
 ##### -- on_vs call & handler -- ########################################
 class on_vs(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1454,6 +1720,10 @@ class on_vs(object):
 		return all(on_vs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return on_vs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		on_vs.__enabled[name] = status
 
@@ -1461,6 +1731,7 @@ class on_vs(object):
 ##### -- rst_vs call & handler -- ########################################
 class rst_vs(object):
 	__enabled = {}
+	__type = 'controllable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1481,6 +1752,10 @@ class rst_vs(object):
 		return all(rst_vs.__enabled.values())
 
 	@classmethod
+	def is_controllable(cls):
+		return rst_vs.__type == 'controllable'
+
+	@classmethod
 	def set_status(cls, name, status):
 		rst_vs.__enabled[name] = status
 
@@ -1488,6 +1763,7 @@ class rst_vs(object):
 ##### -- victim_found call & handler -- ########################################
 class victim_found(object):
 	__enabled = {}
+	__type = 'uncontrollable'
 
 	@classmethod
 	def call(cls, param = None):
@@ -1506,6 +1782,10 @@ class victim_found(object):
 		False: event not allowed.
 		'''
 		return all(victim_found.__enabled.values())
+
+	@classmethod
+	def is_controllable(cls):
+		return victim_found.__type == 'controllable'
 
 	@classmethod
 	def set_status(cls, name, status):

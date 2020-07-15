@@ -68,7 +68,7 @@ class StateMachine(Thread):
                     print("[SM - " + self.__name + "]: ALERT!!!!\tThis transition should not have occured!")
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
-                    print("[SM - " + self.__name + "]: New state:  ", current_state)
+                    # print("[SM - " + self.__name + "]: New state:  ", current_state)
 
                     ######################################################################################
                     # Terminate the execution of the last node
@@ -143,7 +143,7 @@ class Supervisor(Thread):
                     print("[SUP - " + self.__name + "]: ALERT!!!!\tThis transition should not have occured!")
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
-                    print("[SUP - " + self.__name + "]: New state:  ", current_state)
+                    # print("[SUP - " + self.__name + "]: New state:  ", current_state)
 
                 # Print the automaton
                 self.__SUP.export_automaton(current_state)

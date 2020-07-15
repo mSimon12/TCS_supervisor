@@ -390,9 +390,12 @@ class Automaton(object):
                 
                 # Insert status variable
                 events_file.write("\n\t__enabled = {}")
+                if self.__events.at[event,'controllable'] == True:
+                    events_file.write("\n\t__type = 'controllable'")
+                else:
+                    events_file.write("\n\t__type = 'uncontrollable'")
 
                 # Insert event call
-                
                 events_file.write("\n\n\t@classmethod")
                 events_file.write("\n\tdef call(cls, param = None):")
                 events_file.write("\n\t\ttrigger_event('" + event + "', " + event + ", param)")
@@ -409,6 +412,11 @@ class Automaton(object):
                 events_file.write("\n\tdef get_status(cls):")
                 events_file.write("\n\t\t'''\n\t\tTrue: event enabled;\n\t\tFalse: event not allowed.\n\t\t'''")
                 events_file.write("\n\t\treturn all(" + event + ".__enabled.values())")
+
+                # Insert get status function
+                events_file.write("\n\n\t@classmethod")
+                events_file.write("\n\tdef is_controllable(cls):")
+                events_file.write("\n\t\treturn " + event + ".__type == 'controllable'")
 
                 #Insert set status function
                 events_file.write("\n\n\t@classmethod")

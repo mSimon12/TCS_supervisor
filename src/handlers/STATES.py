@@ -235,3 +235,312 @@ class victim_system(object):
 		#Write code here...
 		pass
 
+
+class bat_low(object):
+
+	##### -- S0 handler -- ########################################
+	@classmethod
+	def S0_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- S1 handler -- ########################################
+	@classmethod
+	def S1_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- S2 handler -- ########################################
+	@classmethod
+	def S2_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- S3 handler -- ########################################
+	@classmethod
+	def S3_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class critical_failure(object):
+
+	##### -- M_FAIL handler -- ########################################
+	@classmethod
+	def M_FAIL_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- M_OK handler -- ########################################
+	@classmethod
+	def M_OK_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class GS_turn_off_condition(object):
+
+	##### -- MI_OFF handler -- ########################################
+	@classmethod
+	def Mi_OFF_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- MI_ON handler -- ########################################
+	@classmethod
+	def Mi_ON_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class manouvers_at_critical_battery(object):
+
+	##### -- BAT_DEAD handler -- ########################################
+	@classmethod
+	def BAT_DEAD_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- BAT_NOT_DEAD handler -- ########################################
+	@classmethod
+	def BAT_NOT_DEAD_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class manouvers_gs_dependencies(object):
+
+	##### -- GS_OFF handler -- ########################################
+	@classmethod
+	def GS_OFF_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- GS_ON handler -- ########################################
+	@classmethod
+	def GS_ON_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class manouvers_ME(object):
+
+	##### -- MI_EXE handler -- ########################################
+	@classmethod
+	def Mi_EXE_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- NO_MI handler -- ########################################
+	@classmethod
+	def NO_Mi_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class manouvers_vs_dependencies(object):
+
+	##### -- VS_OFF handler -- ########################################
+	@classmethod
+	def VS_OFF_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- VS_ON handler -- ########################################
+	@classmethod
+	def VS_ON_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class motion_assist_request(object):
+
+	##### -- ASSIST_ALLOWED handler -- ########################################
+	@classmethod
+	def ASSIST_ALLOWED_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- NO_ASSIT handler -- ########################################
+	@classmethod
+	def NO_ASSIT_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class position_failure(object):
+
+	##### -- POS_FAIL handler -- ########################################
+	@classmethod
+	def POS_FAIL_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- POS_OK handler -- ########################################
+	@classmethod
+	def POS_OK_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class report_gas_found(object):
+
+	##### -- G_TO_REPORT handler -- ########################################
+	@classmethod
+	def G_TO_REPORT_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- NO_G handler -- ########################################
+	@classmethod
+	def NO_G_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class report_victim_found(object):
+
+	##### -- NO_V handler -- ########################################
+	@classmethod
+	def NO_V_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- V_TO_REPORT handler -- ########################################
+	@classmethod
+	def V_TO_REPORT_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class sensors_at_critical_battery(object):
+
+	##### -- BAT_DEAD handler -- ########################################
+	@classmethod
+	def BAT_DEAD_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- BAT_NOT_DEAD handler -- ########################################
+	@classmethod
+	def BAT_NOT_DEAD_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class simple_failure(object):
+
+	##### -- POS_FAIL handler -- ########################################
+	@classmethod
+	def POS_FAIL_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- POS_OK handler -- ########################################
+	@classmethod
+	def POS_OK_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class tele_start_condition(object):
+
+	##### -- TELE_NOK handler -- ########################################
+	@classmethod
+	def TELE_NOK_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- TELE_OK handler -- ########################################
+	@classmethod
+	def TELE_OK_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class teleoperation_pref(object):
+
+	##### -- AUTO handler -- ########################################
+	@classmethod
+	def AUTO_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- TELE handler -- ########################################
+	@classmethod
+	def TELE_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class vs_error(object):
+
+	##### -- VS_NOK_MI_OFF handler -- ########################################
+	@classmethod
+	def VS_NOK_Mi_OFF_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- VS_NOK_MI_ON handler -- ########################################
+	@classmethod
+	def VS_NOK_Mi_ON_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- VS_OK_MI_OFF handler -- ########################################
+	@classmethod
+	def VS_OK_Mi_OFF_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- VS_OK_MI_ON handler -- ########################################
+	@classmethod
+	def VS_OK_Mi_ON_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class VS_turn_off_condition(object):
+
+	##### -- MI_OFF handler -- ########################################
+	@classmethod
+	def Mi_OFF_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- MI_ON handler -- ########################################
+	@classmethod
+	def Mi_ON_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class vsv_pref_after_victim_found(object):
+
+	##### -- ALL_M handler -- ########################################
+	@classmethod
+	def ALL_M_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- ONLY_VSV handler -- ########################################
+	@classmethod
+	def ONLY_VSV_handler(self, param = None):
+		#Write code here...
+		pass
+
+
+class vsv_start_condition(object):
+
+	##### -- VSV_NOK handler -- ########################################
+	@classmethod
+	def VSV_NOK_handler(self, param = None):
+		#Write code here...
+		pass
+
+	##### -- VSV_OK handler -- ########################################
+	@classmethod
+	def VSV_OK_handler(self, param = None):
+		#Write code here...
+		pass
+

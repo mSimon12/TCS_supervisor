@@ -19,3 +19,7 @@ G = MultiAutomata('Plant')
 G.read_xml('files/plant.xml')
 G.generate_calls()
 
+S = MultiAutomata('Plant')
+S.read_xml('files/supervisors.xml')
+S.generate_calls()
+

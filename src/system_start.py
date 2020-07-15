@@ -1,8 +1,12 @@
+import os
+
 from lib.Automaton import MultiAutomata
 from lib.StateMachine import StateMachine, Supervisor
 from MissionManager import MissionManager
 from Intereface import EventInterface
 
+# Set environment variable required for the Interface execution
+os.environ["DISPLAY"]=":0"
 
 #############################################################################
 #### Create and Start Multiple State Machines from one file  #################
