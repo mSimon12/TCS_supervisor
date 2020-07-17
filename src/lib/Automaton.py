@@ -3,6 +3,7 @@ import os
 import errno
 
 import pandas as pd
+import numpy as np
 from tabulate import tabulate
 from graphviz import Digraph
 import untangle as ut 
@@ -41,6 +42,7 @@ class MultiAutomata(object):
         for a in self.__Automata.values():
             a.gen_events_calls()
             a.gen_states_calls()
+            a.gen_translation_table()
 
 
 ######################################################################################################### 
@@ -461,3 +463,27 @@ class Automaton(object):
                 states_file.write("\n\t\tpass")
             states_file.write("\n\n")
             states_file.close()                                             # Close the access to the file
+
+
+    def gen_translation_table(self):
+        '''
+            Generate a csv file with a translation table from high-level to low-level events
+        '''
+        filename = "handlers/translation_table.csv"
+        if not os.path.exists(os.path.dirname(filename)):
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+
+        for event in self.__events.index:
+            try:
+                translation = pd.read_csv(filename)
+
+                if not (event in translation['high-level'].values):
+                    translation = pd.DataFrame({'high-level': [event], 'low-level': [np.nan]})
+                    translation.to_csv(filename, mode='a', header=False, index=False)
+            except:
+                translation = pd.DataFrame({'high-level': [event], 'low-level': [np.nan]})
+                translation.to_csv(filename, mode='a', header=True, index=False)
