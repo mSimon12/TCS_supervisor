@@ -4,8 +4,8 @@ from multiprocessing import Process
 
 from lib.Automaton import Automaton
 from lib.EventDispatcher import g_var
-from handlers.EVENTS import *
-# from handlers.STATES import *
+from OP.EVENTS import *
+# from OP.STATES import *
 
 ######################################################################################################### 
 class StateMachine(Thread):

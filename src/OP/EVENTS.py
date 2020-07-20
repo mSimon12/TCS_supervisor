@@ -1,4 +1,27 @@
+import pandas as pd
 from lib.EventDispatcher import trigger_event
+
+'''
+	This file contains all the events (controllable and non-controllable)
+	related to the Automata created. Each high-level event has a call method
+	that can is responsible for executing the event.
+
+	The procedures related to each event must be implemented into the 'handler' method.
+
+	*If desired, the hl_2_ll function can be called into the handler to translate the
+	current high-level event to a low-level signal configured on the translation_table.csv
+'''
+
+def hl_2_ll(hl_event):
+	'''
+	This function is responsible for translating high-level events into low-level signals.
+	'''
+	# Get translation table (high-level -> low-level)
+	filename = 'OP/translation_table.csv'
+	translation_table = pd.read_csv(filename)
+	ll_event = translation_table[(translation_table['high-level']==hl_event)]['low-level'].array	# Translate event
+	return ll_event
+
 
 ##### -- abort_app call & handler -- ########################################
 class abort_app(object):
@@ -11,7 +34,7 @@ class abort_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event abort_app...')
 		pass
 
@@ -43,7 +66,7 @@ class end_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event end_app...')
 		pass
 
@@ -75,7 +98,7 @@ class er_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_app...')
 		pass
 
@@ -107,7 +130,7 @@ class rsm_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rsm_app...')
 		pass
 
@@ -139,7 +162,7 @@ class rst_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_app...')
 		pass
 
@@ -171,7 +194,7 @@ class st_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event st_app...')
 		pass
 
@@ -203,7 +226,7 @@ class sus_app(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event sus_app...')
 		pass
 
@@ -224,294 +247,6 @@ class sus_app(object):
 		sus_app.__enabled[name] = status
 
 
-##### -- bat_L call & handler -- ########################################
-class bat_L(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('bat_L', bat_L, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event bat_L...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(bat_L.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return bat_L.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		bat_L.__enabled[name] = status
-
-
-##### -- bat_LL call & handler -- ########################################
-class bat_LL(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('bat_LL', bat_LL, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event bat_LL...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(bat_LL.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return bat_LL.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		bat_LL.__enabled[name] = status
-
-
-##### -- bat_OK call & handler -- ########################################
-class bat_OK(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('bat_OK', bat_OK, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event bat_OK...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(bat_OK.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return bat_OK.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		bat_OK.__enabled[name] = status
-
-
-##### -- call_tele call & handler -- ########################################
-class call_tele(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('call_tele', call_tele, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event call_tele...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(call_tele.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return call_tele.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		call_tele.__enabled[name] = status
-
-
-##### -- no_rb_pref call & handler -- ########################################
-class no_rb_pref(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('no_rb_pref', no_rb_pref, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event no_rb_pref...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(no_rb_pref.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return no_rb_pref.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		no_rb_pref.__enabled[name] = status
-
-
-##### -- rb_pref call & handler -- ########################################
-class rb_pref(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('rb_pref', rb_pref, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event rb_pref...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(rb_pref.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return rb_pref.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		rb_pref.__enabled[name] = status
-
-
-##### -- rep_gas call & handler -- ########################################
-class rep_gas(object):
-	__enabled = {}
-	__type = 'controllable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('rep_gas', rep_gas, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event rep_gas...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(rep_gas.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return rep_gas.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		rep_gas.__enabled[name] = status
-
-
-##### -- rep_victim call & handler -- ########################################
-class rep_victim(object):
-	__enabled = {}
-	__type = 'controllable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('rep_victim', rep_victim, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event rep_victim...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(rep_victim.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return rep_victim.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		rep_victim.__enabled[name] = status
-
-
-##### -- req_assist call & handler -- ########################################
-class req_assist(object):
-	__enabled = {}
-	__type = 'controllable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('req_assist', req_assist, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event req_assist...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(req_assist.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return req_assist.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		req_assist.__enabled[name] = status
-
-
 ##### -- abort_exp call & handler -- ########################################
 class abort_exp(object):
 	__enabled = {}
@@ -523,7 +258,7 @@ class abort_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event abort_exp...')
 		pass
 
@@ -555,7 +290,7 @@ class end_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event end_exp...')
 		pass
 
@@ -587,7 +322,7 @@ class er_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_exp...')
 		pass
 
@@ -619,7 +354,7 @@ class rsm_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rsm_exp...')
 		pass
 
@@ -651,7 +386,7 @@ class rst_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_exp...')
 		pass
 
@@ -683,7 +418,7 @@ class st_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event st_exp...')
 		pass
 
@@ -715,7 +450,7 @@ class sus_exp(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event sus_exp...')
 		pass
 
@@ -736,134 +471,6 @@ class sus_exp(object):
 		sus_exp.__enabled[name] = status
 
 
-##### -- critic_fail call & handler -- ########################################
-class critic_fail(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('critic_fail', critic_fail, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event critic_fail...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(critic_fail.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return critic_fail.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		critic_fail.__enabled[name] = status
-
-
-##### -- fail call & handler -- ########################################
-class fail(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('fail', fail, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event fail...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(fail.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return fail.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		fail.__enabled[name] = status
-
-
-##### -- pos_fail call & handler -- ########################################
-class pos_fail(object):
-	__enabled = {}
-	__type = 'uncontrollable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('pos_fail', pos_fail, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event pos_fail...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(pos_fail.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return pos_fail.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		pos_fail.__enabled[name] = status
-
-
-##### -- rst_f call & handler -- ########################################
-class rst_f(object):
-	__enabled = {}
-	__type = 'controllable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('rst_f', rst_f, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event rst_f...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(rst_f.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return rst_f.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		rst_f.__enabled[name] = status
-
-
 ##### -- er_gs call & handler -- ########################################
 class er_gs(object):
 	__enabled = {}
@@ -875,7 +482,7 @@ class er_gs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_gs...')
 		pass
 
@@ -907,7 +514,7 @@ class gas_found(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event gas_found...')
 		pass
 
@@ -939,7 +546,7 @@ class off_gs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event off_gs...')
 		pass
 
@@ -971,7 +578,7 @@ class on_gs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event on_gs...')
 		pass
 
@@ -1003,7 +610,7 @@ class rst_gs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_gs...')
 		pass
 
@@ -1024,38 +631,6 @@ class rst_gs(object):
 		rst_gs.__enabled[name] = status
 
 
-##### -- move_to call & handler -- ########################################
-class move_to(object):
-	__enabled = {}
-	__type = 'controllable'
-
-	@classmethod
-	def call(cls, param = None):
-		trigger_event('move_to', move_to, param)
-
-	@classmethod
-	def handler(cls, param = None):
-		#Write code here...
-		print('Executing event move_to...')
-		pass
-
-	@classmethod
-	def get_status(cls):
-		'''
-		True: event enabled;
-		False: event not allowed.
-		'''
-		return all(move_to.__enabled.values())
-
-	@classmethod
-	def is_controllable(cls):
-		return move_to.__type == 'controllable'
-
-	@classmethod
-	def set_status(cls, name, status):
-		move_to.__enabled[name] = status
-
-
 ##### -- abort_rb call & handler -- ########################################
 class abort_rb(object):
 	__enabled = {}
@@ -1067,7 +642,7 @@ class abort_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event abort_rb...')
 		pass
 
@@ -1099,7 +674,7 @@ class end_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event end_rb...')
 		pass
 
@@ -1131,7 +706,7 @@ class er_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_rb...')
 		pass
 
@@ -1163,7 +738,7 @@ class rsm_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rsm_rb...')
 		pass
 
@@ -1195,7 +770,7 @@ class rst_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_rb...')
 		pass
 
@@ -1227,7 +802,7 @@ class st_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event st_rb...')
 		pass
 
@@ -1259,7 +834,7 @@ class sus_rb(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event sus_rb...')
 		pass
 
@@ -1291,7 +866,7 @@ class end_tele(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event end_tele...')
 		pass
 
@@ -1323,7 +898,7 @@ class er_tele(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_tele...')
 		pass
 
@@ -1355,7 +930,7 @@ class rst_tele(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_tele...')
 		pass
 
@@ -1387,7 +962,7 @@ class st_tele(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event st_tele...')
 		pass
 
@@ -1419,7 +994,7 @@ class abort_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event abort_vsv...')
 		pass
 
@@ -1451,7 +1026,7 @@ class end_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event end_vsv...')
 		pass
 
@@ -1483,7 +1058,7 @@ class er_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_vsv...')
 		pass
 
@@ -1515,7 +1090,7 @@ class rsm_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rsm_vsv...')
 		pass
 
@@ -1547,7 +1122,7 @@ class rst_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_vsv...')
 		pass
 
@@ -1579,7 +1154,7 @@ class st_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event st_vsv...')
 		pass
 
@@ -1611,7 +1186,7 @@ class sus_vsv(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event sus_vsv...')
 		pass
 
@@ -1643,7 +1218,7 @@ class er_vs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event er_vs...')
 		pass
 
@@ -1675,7 +1250,7 @@ class off_vs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event off_vs...')
 		pass
 
@@ -1707,7 +1282,7 @@ class on_vs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event on_vs...')
 		pass
 
@@ -1739,7 +1314,7 @@ class rst_vs(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event rst_vs...')
 		pass
 
@@ -1771,7 +1346,7 @@ class victim_found(object):
 
 	@classmethod
 	def handler(cls, param = None):
-		#Write code here...
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
 		print('Executing event victim_found...')
 		pass
 
@@ -1790,4 +1365,36 @@ class victim_found(object):
 	@classmethod
 	def set_status(cls, name, status):
 		victim_found.__enabled[name] = status
+
+
+##### -- move_to call & handler -- ########################################
+class move_to(object):
+	__enabled = {}
+	__type = 'controllable'
+
+	@classmethod
+	def call(cls, param = None):
+		trigger_event('move_to', move_to, param)
+
+	@classmethod
+	def handler(cls, param = None):
+		##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####
+		print('Executing event move_to...')
+		pass
+
+	@classmethod
+	def get_status(cls):
+		'''
+		True: event enabled;
+		False: event not allowed.
+		'''
+		return all(move_to.__enabled.values())
+
+	@classmethod
+	def is_controllable(cls):
+		return move_to.__type == 'controllable'
+
+	@classmethod
+	def set_status(cls, name, status):
+		move_to.__enabled[name] = status
 

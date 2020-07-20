@@ -17,6 +17,7 @@ class MultiAutomata(object):
         self.__name = block_name
         self.__Automata = {}        #Dictionary cantaining all automata by name
 
+
     def read_xml(self, file):
         '''
             Read all Automata in the file
@@ -362,7 +363,7 @@ class Automaton(object):
             Generate a file containing calls for the execution of the events 
             present on this Automaton
         '''
-        filename = "handlers/EVENTS.py"
+        filename = "OP/EVENTS.py"
         if not os.path.exists(os.path.dirname(filename)):
             try:
                 os.makedirs(os.path.dirname(filename))
@@ -370,15 +371,41 @@ class Automaton(object):
                 if exc.errno != errno.EEXIST:
                     raise
 
-        events_file = open(filename, "a+")                           # Open the file with the events handlers
+        events_file = open(filename, "a+")                       # Open the file with the events handlers
         events_file.seek(0, os.SEEK_SET)                         # Move the cursor to first line
         content = events_file.read()                             # Read the content of the file
 
-        # Insert importation of EventDispatcher
-        if "from lib.EventDispatcher import trigger_event" not in content:
-            events_file.seek(0, os.SEEK_SET)
+        # Verify if the file is empty
+        if os.stat(filename).st_size == 0:
+            # Insert importation of pandas
+            events_file.write("import pandas as pd\n") 
+
+            # Insert importation of EventDispatcher
             events_file.write("from lib.EventDispatcher import trigger_event\n")    
+
+            # Insert file description
+            events_file.write("\n'''")
+            events_file.write("\n\tThis file contains all the events (controllable and non-controllable)")
+            events_file.write("\n\trelated to the Automata created. Each high-level event has a call method")
+            events_file.write("\n\tthat can is responsible for executing the event.")
+            events_file.write("\n\n\tThe procedures related to each event must be implemented into the 'handler' method.")
+            events_file.write("\n\n\t*If desired, the hl_2_ll function can be called into the handler to translate the")
+            events_file.write("\n\tcurrent high-level event to a low-level signal configured on the translation_table.csv")
+            events_file.write("\n'''")
+
+            # Insert the translation function
+            events_file.write("\n\ndef hl_2_ll(hl_event):")
+            events_file.write("\n\t'''")
+            events_file.write("\n\tThis function is responsible for translating high-level events into low-level signals.")
+            events_file.write("\n\t'''")
+            events_file.write("\n\t# Get translation table (high-level -> low-level)")
+            events_file.write("\n\tfilename = 'OP/translation_table.csv'")
+            events_file.write("\n\ttranslation_table = pd.read_csv(filename)")
+            events_file.write("\n\tll_event = translation_table[(translation_table['high-level']==hl_event)]['low-level'].array\t# Translate event")
+            events_file.write("\n\treturn ll_event\n\n")
+
         events_file.seek(0, os.SEEK_END)
+
 
         #Verify presence of each event and insert if not already defined
         for event in self.__events.index:
@@ -405,7 +432,7 @@ class Automaton(object):
                 # Insert event handler
                 events_file.write("\n\n\t@classmethod")
                 events_file.write("\n\tdef handler(cls, param = None):")
-                events_file.write("\n\t\t#Write code here...")
+                events_file.write("\n\t\t##### >>>>>>>>>>>>>>>>>>>>>    WRITE YOUR CODE HERE    <<<<<<<<<<<<<<<<<<<<<<< #####")
                 events_file.write("\n\t\tprint('Executing event "+ event +"...')")
                 events_file.write("\n\t\tpass")
 
@@ -433,7 +460,7 @@ class Automaton(object):
             Generate a file containing calls for the execution of the states 
             present on this Automaton
         '''
-        filename = "handlers/STATES.py"
+        filename = "OP/STATES.py"
         if not os.path.exists(os.path.dirname(filename)):
             try:
                 os.makedirs(os.path.dirname(filename))
@@ -469,7 +496,7 @@ class Automaton(object):
         '''
             Generate a csv file with a translation table from high-level to low-level events
         '''
-        filename = "handlers/translation_table.csv"
+        filename = "OP/translation_table.csv"
         if not os.path.exists(os.path.dirname(filename)):
             try:
                 os.makedirs(os.path.dirname(filename))

@@ -27,45 +27,6 @@
 		<Transition source="3" dest="1" event="3"/>
 	</Transitions>
 </Automaton>
-<Automaton name="battery_monitor" type="Plant">
-	<Events>
-		<Event id="0" label="bat_L" controllable="false"/>
-		<Event id="1" label="bat_LL" controllable="false"/>
-		<Event id="2" label="bat_OK" controllable="false"/>
-	</Events>
-	<States>
-		<State id="0" name="BAT_OK" initial="true" accepting="true"/>
-		<State id="1" name="CRITICAL"/>
-		<State id="2" name="LOW"/>
-	</States>
-	<Transitions>
-		<Transition source="0" dest="2" event="0"/>
-		<Transition source="1" dest="2" event="0"/>
-		<Transition source="2" dest="1" event="1"/>
-		<Transition source="2" dest="0" event="2"/>
-	</Transitions>
-</Automaton>
-<Automaton name="communication" type="Plant">
-	<Events>
-		<Event id="0" label="call_tele" controllable="false"/>
-		<Event id="1" label="no_rb_pref" controllable="false"/>
-		<Event id="2" label="rb_pref" controllable="false"/>
-		<Event id="3" label="rep_gas"/>
-		<Event id="4" label="rep_victim"/>
-		<Event id="5" label="req_assist"/>
-	</Events>
-	<States>
-		<State id="0" name="COMMUNICATION" initial="true" accepting="true"/>
-	</States>
-	<Transitions>
-		<Transition source="0" dest="0" event="3"/>
-		<Transition source="0" dest="0" event="4"/>
-		<Transition source="0" dest="0" event="5"/>
-		<Transition source="0" dest="0" event="0"/>
-		<Transition source="0" dest="0" event="1"/>
-		<Transition source="0" dest="0" event="2"/>
-	</Transitions>
-</Automaton>
 <Automaton name="explore" type="Plant">
 	<Events>
 		<Event id="0" label="abort_exp"/>
@@ -93,31 +54,6 @@
 		<Transition source="3" dest="1" event="3"/>
 	</Transitions>
 </Automaton>
-<Automaton name="failures" type="Plant">
-	<Events>
-		<Event id="0" label="critic_fail" controllable="false"/>
-		<Event id="1" label="fail" controllable="false"/>
-		<Event id="2" label="pos_fail" controllable="false"/>
-		<Event id="3" label="rst_f"/>
-	</Events>
-	<States>
-		<State id="0" name="CRITIC_F"/>
-		<State id="1" name="NO_FAIL" initial="true" accepting="true"/>
-		<State id="2" name="POS_F"/>
-		<State id="3" name="SIMP_F"/>
-	</States>
-	<Transitions>
-		<Transition source="0" dest="1" event="3"/>
-		<Transition source="1" dest="3" event="1"/>
-		<Transition source="1" dest="0" event="0"/>
-		<Transition source="1" dest="2" event="2"/>
-		<Transition source="2" dest="3" event="1"/>
-		<Transition source="2" dest="0" event="0"/>
-		<Transition source="2" dest="1" event="3"/>
-		<Transition source="3" dest="1" event="3"/>
-		<Transition source="3" dest="0" event="0"/>
-	</Transitions>
-</Automaton>
 <Automaton name="gas_sensor" type="Plant">
 	<Events>
 		<Event id="0" label="er_gs" controllable="false"/>
@@ -137,17 +73,6 @@
 		<Transition source="2" dest="1" event="2"/>
 		<Transition source="2" dest="2" event="1"/>
 		<Transition source="2" dest="0" event="0"/>
-	</Transitions>
-</Automaton>
-<Automaton name="motion_system" type="Plant">
-	<Events>
-		<Event id="0" label="move_to"/>
-	</Events>
-	<States>
-		<State id="0" name="STEP_MOTIONS" initial="true" accepting="true"/>
-	</States>
-	<Transitions>
-		<Transition source="0" dest="0" event="0"/>
 	</Transitions>
 </Automaton>
 <Automaton name="return_to_base" type="Plant">

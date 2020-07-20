@@ -1,9 +1,11 @@
 from lib.Automaton import Automaton, MultiAutomata
 from lib.StateMachine import StateMachine, Supervisor
-from handlers.EVENTS import *
+from OP.EVENTS import *
 import time
 
+##############################################################################
 #### Create and Start one State Machine  #####################################
+
 # G1 = Automaton('Battery Monitor')
 # G1.read_xml('files/battery_monitor.xml')
 
@@ -12,8 +14,9 @@ import time
 
 
 #### Create and Start Multiple State Machines from one file  #################
+
 # G = MultiAutomata('Plant')
-# G.read_xml('files/plant.xml')         # File with multiple Automata
+# G.read_xml('files/Plant.xml')         # File with multiple Automata
 # SM = {}
 # for aut in G.get_automata().values():
 #     SM[aut.get_name()] = StateMachine(aut)
@@ -25,16 +28,18 @@ import time
 
 ##############################################################################
 #### Create and Start one Supervisor  ########################################
-# G1 = Automaton('Battery Monitor')
-# G1.read_xml('files/battery_monitor.xml')
 
-# SM = Supervisor(G1)
+# S = Automaton('Battery Monitor')
+# S.read_xml('files/battery_monitor.xml')
+
+# SM = Supervisor(S)
 # SM.start()
 
 
 #### Create and Start Multiple Supervisors from one file  ###################
+
 # S = MultiAutomata('Supervisors')
-# S.read_xml('files/supervisors.xml')         # File with multiple Automata
+# S.read_xml('files/Supervisors.xml')         # File with multiple Automata
 # SUP = {}
 # for aut in S.get_automata().values():
 #     SUP[aut.get_name()] = Supervisor(aut)
