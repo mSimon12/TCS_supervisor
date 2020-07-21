@@ -1,3 +1,5 @@
+# pycache files
+.pyc
 
 # Log file
 *.log
