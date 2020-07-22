@@ -1,11 +1,10 @@
 import time
 import inspect
-
+import pandas as pd
 from threading import Thread, Condition
-import OP.EVENTS as events_module
-from lib.EventDispatcher import g_var
 
-from OP.EVENTS import *
+from lib.ProductSystem import g_var
+import OP.EVENTS as events_module
 
 class MissionManager(Thread):
     '''
@@ -19,24 +18,31 @@ class MissionManager(Thread):
     def __init__(self):
         Thread.__init__(self)   
 
-    def get_last_event(self):
-        g_var.req_SM_update.acquire()
-        last = g_var.last_event
-        g_var.req_SM_update.release()
+        # Get all events call in the module
+        self.__cont_events = {}
+        for x in inspect.getmembers(events_module,inspect.isclass):
+            if x[1].is_controllable():
+                self.__cont_events[x[0]] = x[1]  
 
-        return last
+    def get_last_update(self):
+        g_var.trace_update_flag.acquire()
+        current_status = g_var.events_trace.tail(1)        # Get the last update
+        g_var.trace_update_flag.release()
+
+        return current_status
 
     
     def run(self):
-        # Get all events call in the events_module
-        events = {}
-        for x in inspect.getmembers(events_module,inspect.isclass):
-            events[x[0]] = x[1]  
-
-        # On this exemple the Mission Manager will anly run the following events
-        events_to_execute = ['on_gs', 'on_vs', 'st_app', 'end_app', 'off_vs', 'off_gs']
+        # On this exemple the Mission Manager will only run the following events
+        events_to_execute = ['on_gs', 'on_vs', 'st_app', 'off_vs', 'off_gs']
 
         for e in events_to_execute:
-            print("\nLast event --> ", self.get_last_event())
-            events[e].call()
+            current = self.get_last_update()
+            last_event = current['event'].array[0]
+            enabled_events = current['enabled_events'].array[0]
+            print("\nLast event --> ", last_event)
+            print("Enabled_events --> ", enabled_events)
+
+            self.__cont_events[e].call()
+            time.sleep(2)
            

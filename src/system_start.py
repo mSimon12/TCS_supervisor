@@ -3,7 +3,16 @@ from lib.Automaton import MultiAutomata
 from lib.StateMachine import StateMachine, Supervisor
 from MissionManager import MissionManager
 from Intereface import EventInterface
+from lib.ProductSystem import EventsMonitor
 
+
+em = EventsMonitor()
+em.start()
+
+#############################################################################
+#### Start the Interface ####################################################
+ev = EventInterface()
+ev.start()
 
 #############################################################################
 #### Create and Start Multiple State Machines from one file  #################
@@ -31,16 +40,6 @@ for sup in SUP.values():
     sup.start()
 
 #############################################################################
-#### Start the Interface ####################################################
-ev = EventInterface()
-ev.start()
-
-#############################################################################
 #### Start the Mission Manager  #############################################
 mm = MissionManager()
 mm.start()
-
-
-
-
-

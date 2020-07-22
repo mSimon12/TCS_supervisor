@@ -1,5 +1,5 @@
 import pandas as pd
-from lib.EventDispatcher import trigger_event
+from lib.ProductSystem import trigger_event
 
 '''
 	This file contains all the events (controllable and non-controllable)
