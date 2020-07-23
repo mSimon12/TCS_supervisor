@@ -26,6 +26,7 @@ class MissionManager(Thread):
 
     def get_last_update(self):
         g_var.trace_update_flag.acquire()
+        g_var.trace_update_flag.wait()
         current_status = g_var.events_trace.tail(1)        # Get the last update
         g_var.trace_update_flag.release()
 
@@ -34,14 +35,16 @@ class MissionManager(Thread):
     
     def run(self):
         # On this exemple the Mission Manager will only run the following events
-        events_to_execute = ['on_gs', 'on_vs', 'st_app', 'off_vs', 'off_gs']
+        events_to_execute = ['on_gs','off_gs','on_gs', 'on_vs', 'on_vs', 'st_app', 'off_vs', 'off_gs']
 
         for e in events_to_execute:
-            current = self.get_last_update()
-            last_event = current['event'].array[0]
-            enabled_events = current['enabled_events'].array[0]
-            print("\nLast event --> ", last_event)
-            print("Enabled_events --> ", enabled_events)
+            # current = self.get_last_update()
+            # if current.index[0] > 0:
+            #     last_event = current['event'].array[0]
+            #     print("\nLast event --> ", last_event)
+
+            # enabled_events = current['enabled_events'].array[0]
+            # print("Enabled_events --> ", enabled_events)
 
             self.__cont_events[e].call()
             time.sleep(2)

@@ -30,11 +30,10 @@ def trigger_event(event, event_class, param):
 	g_var.allow_events_flag.acquire()
 	while g_var.event_allowed == False:
 		g_var.allow_events_flag.wait()											# Wait till all State Machines are updated
-	g_var.event_allowed = False													# Block occurance of another event
-	g_var.allow_events_flag.release()
-
+	
 	#Verify if the current event is enabled by all SM that contain it
 	if event_class.get_status() == True:
+		g_var.event_allowed = False													# Block occurance of another event
 		g_var.new_event.acquire()											# Update last event occured
 		g_var.last_event = event
 
@@ -49,13 +48,15 @@ def trigger_event(event, event_class, param):
 		g_var.new_event.release()											# Release mutexes
 	else:
 		print(event, ' not enabled!')										# Current controllable event not allowed by the system
+
+	g_var.allow_events_flag.release()
 	
 
 class EventsMonitor(Thread):
 	'''
 		Class responsible for monitoring the set of enabled events, last event and current states
 	'''
-	def __init__(self):
+	def __init__(self, SM_number = 1):
 		Thread.__init__(self)
 
 		# Get all controllable events into a list
@@ -63,6 +64,7 @@ class EventsMonitor(Thread):
 		self.__events = {}
 		for x in inspect.getmembers(events_module, inspect.isclass):
 			self.__events[x[0]]=x[1]
+		self.SM_quantity = SM_number
     
 		self.__cont_e = [e for e in self.__events if self.__events[e].is_controllable()] 
 
@@ -70,7 +72,7 @@ class EventsMonitor(Thread):
 		while True:
 			#Verify if all Machines are updated
 			g_var.SM_update_flag.acquire()
-			while (not all(g_var.SM_status.values()) or (not bool(g_var.SM_status))):
+			while (not all(g_var.SM_status.values())) or (len(g_var.SM_status) < self.SM_quantity):
 				g_var.SM_update_flag.wait()
 			g_var.SM_status = {x: False for x in g_var.SM_status}				# Clear all State Machines status
 			g_var.SM_update_flag.release()

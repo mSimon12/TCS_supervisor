@@ -21,7 +21,9 @@ class EventInterface(Thread):
         # Set environment variable required for the Interface execution
         os.environ["DISPLAY"]=":0"
 
+        # Control of the tracer
         self.current_status_id = -1
+        self.new_trace = False
 
         # Get name of the Machines
         machines = [s[0] for s in inspect.getmembers(states_module,inspect.isclass)]
@@ -52,15 +54,26 @@ class EventInterface(Thread):
         #####################################################################################################################
         #Layout
         layout =[ 
-            [sg.Text('Current machine:'), sg.InputCombo(values=machines, default_value=machines[0], size=(35,10), key='option', enable_events=True)],
-            [sg.Image("output/" + machines[0] + ".png", key="_IMAGE_", background_color="white")],
-            [sg.Text('Trigger event')],
-            [sg.Radio('Controllable','event_type', default=False, key='controllable',enable_events=True), sg.Radio('Uncontrollable','event_type', default=True, key='uncontrollable',enable_events=True)],
-            [sg.InputCombo(values = self.__not_cont_inputs, default_value= self.__not_cont_inputs[0], size=(20,10), key='selected_event', enable_events=True), sg.Button('TRIGGER', key='trigger')]
-        ]
+            [sg.Text('Current machine:'), 
+             sg.InputCombo(values=machines, default_value=machines[0], size=(35,10), key='option', enable_events=True)],
 
+            [sg.Image("output/" + machines[0] + ".png", key="_IMAGE_", background_color="white")],
+
+            [sg.Frame('Trace:',[
+                [sg.Text("Id"), sg.Text("Event"),sg.Text("Time")],
+                [sg.Multiline(size=(20,10), key='tracer', disabled=True, autoscroll=True)],
+                [sg.SaveAs("SAVE", key='save', file_types = (("ALL Files", "*.*"),("CSV text",".csv"),("Text",".txt")), enable_events=True)]
+                ]),
+            sg.Frame('Trigger event',[
+                [sg.Radio('Controllable','event_type', default=False, key='controllable',enable_events=True)], 
+                [sg.Radio('Uncontrollable','event_type', default=True, key='uncontrollable',enable_events=True)],
+                [sg.InputCombo(values = self.__not_cont_inputs, default_value= self.__not_cont_inputs[0], size=(20,10), key='selected_event', enable_events=True)],
+                [sg.Button('TRIGGER', key='trigger')]
+                ])]                      
+        ]
+        
         #Janela
-        self.janela = sg.Window("State Machine visualizer", size=(1000,500)).layout(layout)
+        self.janela = sg.Window("State Machine visualizer", size=(1000,600)).layout(layout)
         
         
     def run(self):
@@ -71,19 +84,36 @@ class EventInterface(Thread):
 
         while True:
             #Extrair os dados da tela
-            event, values = self.janela.Read(timeout=1000)
+            event, values = self.janela.Read(timeout=10)
             if event in (None, 'Cancel'):   # if user closes window or clicks cancel
                 print('\nCLOSING EVENT INTERFACE ...\n')
                 break
 
-            #Update the Automaton Image
-            try:
-                self.janela.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
-            except:
-                pass
-            
-            #Update list of events if there is a change between 'controllable' and 'uncontrollable'
-            if event == 'controllable':
+            # New event occured
+            if self.new_trace==True:
+                self.new_trace = False
+                #Update tracer
+                if self.trace.tail(1).index[0] > 0:
+                    if self.__events[self.trace.tail(1)['event'].values[0]].is_controllable():
+                        color = 'blue'
+                    else:
+                        color = 'red'
+                    self.janela['tracer'].print(self.trace.tail(1).drop(columns=['enabled_events','states']).to_string(header=False), text_color=color)
+
+                #Update the Automaton Image
+                try:
+                    self.janela.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
+                except:
+                    pass
+
+            if event == 'option':
+                #Update the Automaton Image
+                try:
+                    self.janela.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
+                except:
+                    pass
+            elif event == 'controllable':
+                #Update list of events if there is a change between 'controllable' and 'uncontrollable'
                 self.janela.Element('selected_event').update(values = self.enabled_e)
                 self.event_type = 'controllable'
             elif event == 'uncontrollable':
@@ -96,6 +126,8 @@ class EventInterface(Thread):
                     self.__events[values['selected_event']].call()
                 else:
                     self.__receiver.receive_event(values['selected_event'])
+            elif event == 'save':
+                print("Save on -> ", values['save'])
 
         self.janela.Close()
 
@@ -108,15 +140,14 @@ class EventInterface(Thread):
             g_var.trace_update_flag.acquire()
             while (g_var.events_trace.tail(1).empty) or (self.current_status_id == g_var.events_trace.tail(1).index[0]):
                 g_var.trace_update_flag.wait()
-            current_status = g_var.events_trace.tail(1)                 # Get the last update
-            self.current_status_id = current_status.index[0]            # Set the id of the last event
+            self.trace = g_var.events_trace                                  # Get the last update
+            self.current_status_id = self.trace.tail(1).index[0]             # Set the id of the last event
 
-            self.enabled_e = current_status['enabled_events'].array[0]
+            self.new_trace = True
+            self.enabled_e = self.trace.tail(1)['enabled_events'].array[0]
 
             # Update list of allowed controllable events
             if self.event_type == 'controllable':
-                self.janela.Element('selected_event').update(values = self.enabled_e)
-
-            #Update tracer
+                self.janela['selected_event'].update(values = self.enabled_e)
 
             g_var.trace_update_flag.release()                   # Release mutex

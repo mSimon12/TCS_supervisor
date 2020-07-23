@@ -5,14 +5,7 @@ from MissionManager import MissionManager
 from Intereface import EventInterface
 from lib.ProductSystem import EventsMonitor
 
-
-em = EventsMonitor()
-em.start()
-
-#############################################################################
-#### Start the Interface ####################################################
-ev = EventInterface()
-ev.start()
+machines_counter = 0
 
 #############################################################################
 #### Create and Start Multiple State Machines from one file  #################
@@ -21,6 +14,7 @@ G.read_xml('files/Plant.xml')         # File with multiple Automata
 SM = {}
 for aut in G.get_automata().values():
     SM[aut.get_name()] = StateMachine(aut)
+    machines_counter += 1
 
 #Start all State Machines
 for sm in SM.values():
@@ -34,10 +28,23 @@ S.read_xml('files/Supervisors.xml')         # File with multiple Automata
 SUP = {}
 for aut in S.get_automata().values():
     SUP[aut.get_name()] = Supervisor(aut)
+    machines_counter += 1
 
 #Start all State Machines
 for sup in SUP.values():
     sup.start()
+
+
+#############################################################################
+#### Start the Events Monitor ###############################################
+em = EventsMonitor(machines_counter)
+em.start()
+
+#############################################################################
+#### Start the Interface ####################################################
+ev = EventInterface()
+ev.start()
+
 
 #############################################################################
 #### Start the Mission Manager  #############################################
