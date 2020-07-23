@@ -11,7 +11,8 @@ import untangle as ut
 ######################################################################################################### 
 class MultiAutomata(object):
     '''
-        Class to generate multiple Automata
+        Class for creating multiple automata from a xml file, saving all into a dictionary according their
+        names into the file.
     '''
     def __init__(self, block_name):
         self.__name = block_name
@@ -387,7 +388,7 @@ class Automaton(object):
             events_file.write("\n'''")
             events_file.write("\n\tThis file contains all the events (controllable and non-controllable)")
             events_file.write("\n\trelated to the Automata created. Each high-level event has a call method")
-            events_file.write("\n\tthat can is responsible for executing the event.")
+            events_file.write("\n\tthat is responsible for executing the event.")
             events_file.write("\n\n\tThe procedures related to each event must be implemented into the 'handler' method.")
             events_file.write("\n\n\t*If desired, the hl_2_ll function can be called into the handler to translate the")
             events_file.write("\n\tcurrent high-level event to a low-level signal configured on the translation_table.csv")

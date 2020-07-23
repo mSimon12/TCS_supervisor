@@ -14,13 +14,15 @@ class EventInterface(Thread):
     '''
         Interface for executing events and visualizing automata.
     '''
-
     def __init__(self):
         Thread.__init__(self)  
 
         # Set environment variable required for the Interface execution
         os.environ["DISPLAY"]=":0"
 
+        #################################################################################
+        #### -- Auxiliary variables -- ##################################################
+        
         # Control of the tracer
         self.current_status_id = -1
         self.new_trace = False
@@ -51,8 +53,8 @@ class EventInterface(Thread):
         # Object to simulate non-controllable events
         self.__receiver = EventReceiver()
 
-        #####################################################################################################################
-        #Layout
+        #################################################################################
+        #### -- Layout of the Window -- #################################################
         layout =[ 
             [sg.Text('Current machine:'), 
              sg.InputCombo(values=machines, default_value=machines[0], size=(35,10), key='option', enable_events=True)],
@@ -62,7 +64,8 @@ class EventInterface(Thread):
             [sg.Frame('Trace:',[
                 [sg.Text("Id"), sg.Text("Event"),sg.Text("Time")],
                 [sg.Multiline(size=(20,10), key='tracer', disabled=True, autoscroll=True)],
-                [sg.SaveAs("SAVE", key='save', file_types = (("ALL Files", "*.*"),("CSV text",".csv"),("Text",".txt")), enable_events=True)]
+                [sg.SaveAs("SAVE", key='save', file_types = (("ALL Files", "*.*"),("CSV text",".csv")), enable_events=True),
+                    sg.Button("REFRESH", key='refresh')]
                 ]),
             sg.Frame('Trigger event',[
                 [sg.Radio('Controllable','event_type', default=False, key='controllable',enable_events=True)], 
@@ -72,8 +75,8 @@ class EventInterface(Thread):
                 ])]                      
         ]
         
-        #Janela
-        self.janela = sg.Window("State Machine visualizer", size=(1000,600)).layout(layout)
+        # start the Window
+        self.window = sg.Window("State Machine visualizer", size=(1000,600)).layout(layout)
         
         
     def run(self):
@@ -84,7 +87,7 @@ class EventInterface(Thread):
 
         while True:
             #Extrair os dados da tela
-            event, values = self.janela.Read(timeout=10)
+            event, values = self.window.Read(timeout=10)
             if event in (None, 'Cancel'):   # if user closes window or clicks cancel
                 print('\nCLOSING EVENT INTERFACE ...\n')
                 break
@@ -98,26 +101,26 @@ class EventInterface(Thread):
                         color = 'blue'
                     else:
                         color = 'red'
-                    self.janela['tracer'].print(self.trace.tail(1).drop(columns=['enabled_events','states']).to_string(header=False), text_color=color)
+                    self.window['tracer'].print(self.trace.tail(1).drop(columns=['enabled_events','states']).to_string(header=False), text_color=color)
 
                 #Update the Automaton Image
                 try:
-                    self.janela.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
+                    self.window.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
                 except:
                     pass
 
             if event == 'option':
                 #Update the Automaton Image
                 try:
-                    self.janela.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
+                    self.window.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
                 except:
                     pass
             elif event == 'controllable':
                 #Update list of events if there is a change between 'controllable' and 'uncontrollable'
-                self.janela.Element('selected_event').update(values = self.enabled_e)
+                self.window.Element('selected_event').update(values = self.enabled_e)
                 self.event_type = 'controllable'
             elif event == 'uncontrollable':
-                self.janela.Element('selected_event').update(values = self.__not_cont_inputs)
+                self.window.Element('selected_event').update(values = self.__not_cont_inputs)
                 self.event_type = 'uncontrollable'
             elif event == 'trigger':
                 # An event is triggered
@@ -126,15 +129,34 @@ class EventInterface(Thread):
                     self.__events[values['selected_event']].call()
                 else:
                     self.__receiver.receive_event(values['selected_event'])
+            elif event == 'refresh':
+                self.window['tracer'].update('')
+                #Refresh tracer
+                if not self.trace.empty: 
+                    for i in self.trace.iloc[1:].index:
+                        if self.__events[self.trace.at[i,'event']].is_controllable():
+                            color = 'blue'
+                        else:
+                            color = 'red'
+                        self.window['tracer'].print(self.trace.loc[[i]].drop(columns=['enabled_events','states']).to_string(header=False), text_color=color)
             elif event == 'save':
-                print("Save on -> ", values['save'])
+                filename = values['save']
+                if '.' not in filename:
+                    filename += ".csv"
 
-        self.janela.Close()
+                if '.csv' in filename:
+                    self.trace.drop(columns=['enabled_events','states']).to_csv(filename)
+                else:
+                    sg.Popup('Wrong file extension!', title='Saving failure!')
+                
+
+        self.window.Close()
 
     ###############################################################################################
     def events_trace(self):
         '''
-            This method monitor the occurance of new events and get the enabled controllable events
+            This method monitor the occurance of new events on the Product System 
+            and get the enabled controllable events.
         '''
         while True:
             g_var.trace_update_flag.acquire()
@@ -148,6 +170,6 @@ class EventInterface(Thread):
 
             # Update list of allowed controllable events
             if self.event_type == 'controllable':
-                self.janela['selected_event'].update(values = self.enabled_e)
+                self.window['selected_event'].update(values = self.enabled_e)
 
             g_var.trace_update_flag.release()                   # Release mutex

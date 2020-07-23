@@ -4,7 +4,7 @@ from lib.ProductSystem import trigger_event
 '''
 	This file contains all the events (controllable and non-controllable)
 	related to the Automata created. Each high-level event has a call method
-	that can is responsible for executing the event.
+	that is responsible for executing the event.
 
 	The procedures related to each event must be implemented into the 'handler' method.
 

@@ -14,8 +14,21 @@ import OP.EVENTS as events_module
 class StateMachine(Thread):
     '''
         Class for the execution of a State Machine as a thread.
+        - It executes an infinit cycle where:
+            1- Updates list of controllable events allowed by this Plant;
+            2- Signal to the EventsMonitor that it is updated;
+            3- Wait for the occurance of a new event;
+            4- Verify if the event belongs to this Plant and update the states if needed;
+            5- Restart the cycle.
+        
+        * Uncontrollable events are always allowed.
+        ** Commented code is for implemanting a state-based approach.
     '''
     def __init__(self, automaton):
+        '''
+            The execution of the State Machines depends on the attribution of an Automaton to be executed.
+                automaton: object of Class Automaton.
+        '''
         Thread.__init__(self)                                                                   # Initialize the thread
         self.__name = automaton.get_name().replace(" ","_")                                     # Name of the StateMachine
         self.__SM = automaton                                                                   # Use the automaton as SM
@@ -44,13 +57,13 @@ class StateMachine(Thread):
             # Enable and disable events
             for e in alpha:
                 if (not trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty) or (events.loc[e,'controllable'] == False):
-                    # Enable event
-                    self.__events_list[e].set_status(self.__name, True)
+                    self.__events_list[e].set_status(self.__name, True)         # Enable event
                 else:
-                    # Disable event
-                    self.__events_list[e].set_status(self.__name, False)
+                    self.__events_list[e].set_status(self.__name, False)        # Disable event
 
-            # Inform event monitor that the SM is updated
+            g_var.machines_current_state[self.__name] = current_state           # Save the actual state
+
+            # Inform EventsMonitor that the SM is updated
             g_var.SM_update_flag.acquire()
             g_var.SM_status[self.__name] = True                 # Signal that the status have been updated
             g_var.SM_update_flag.notify()                       # Notify EventsMonitor that this State Machine is updated
@@ -70,7 +83,7 @@ class StateMachine(Thread):
             if event in alpha:
                 # Verify if the event trigger a transition
                 if trans[(trans['st_node'] == current_state) & (trans['event'] == event)].empty:
-                    print("[SM - " + self.__name + "]: ALERT!!!!\tThis transition is not modeled!")
+                    print("[SM - " + self.__name + "]: ALERT!!!!\tThis transition is not modeled!")         # Alert if the last event was not modeled by this plant, but on its alphabet
                 else:
                     current_state = trans.at[trans[(trans['st_node'] == current_state) & (trans['event'] == event)].index[0],'end_node']
                     # print("[SM - " + self.__name + "]: New state:  ", current_state)
@@ -97,11 +110,24 @@ class StateMachine(Thread):
 ######################################################################################################### 
 class Supervisor(Thread):
     '''
-        Class to run a Supervisor for dinamically monitor the system and disable/enable controllable events
+        Class for the execution of a Supervisor as a thread.
+        - It executes an infinit cycle where:
+            1- Updates list of controllable events allowed by this Plant;
+            2- Signal to the EventsMonitor that it is updated;
+            3- Wait for the occurance of a new event;
+            4- Verify if the event belongs to this Plant and update the states if needed;
+            5- Restart the cycle.
+        
+        * Uncontrollable events are always allowed.
     '''
+
     def __init__(self, automaton):
+        '''
+            The execution of the Supervisor depends on the attribution of an Automaton to be executed.
+                automaton: object of Class Automaton.
+        '''
         Thread.__init__(self)                                                                   # Initialize the thread
-        self.__name = automaton.get_name().replace(" ","_")                                     # Name of the StateMachine
+        self.__name = automaton.get_name().replace(" ","_")                                     # Name of the Supervisor
         self.__SUP = automaton                                                                  # Use the automaton as SUP
 
         # Get all events call in the module
@@ -121,11 +147,9 @@ class Supervisor(Thread):
             # Enable and disable events
             for e in alpha:
                 if (not trans[(trans['st_node'] == current_state) & (trans['event'] == e)].empty) or (events.loc[e,'controllable'] == False):
-                    # Enable event
-                    self.__events_list[e].set_status(self.__name, True)
+                    self.__events_list[e].set_status(self.__name, True)          # Enable event
                 else:
-                    # Disable event
-                    self.__events_list[e].set_status(self.__name, False)
+                    self.__events_list[e].set_status(self.__name, False)        # Disable event
 
             # Inform event monitor that the SM is updated
             g_var.SM_update_flag.acquire()
@@ -143,7 +167,7 @@ class Supervisor(Thread):
             event = g_var.last_event                            # Get the last occured event
             g_var.new_event.release()                           # Release access to the event section
 
-            # Verify if the event belongs to this State Machine
+            # Verify if the event belongs to this Supervisor
             if event in alpha:
                 # Verify if the event trigger a transition
                 if trans[(trans['st_node'] == current_state) & (trans['event'] == event)].empty:

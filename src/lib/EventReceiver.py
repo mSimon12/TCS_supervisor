@@ -26,10 +26,10 @@ class EventReceiver(object):
 
     def receive_event(self, ll_event, param=None):
         '''
-            Here you implement the system responsible for receiving
+            Here you implement the system responsible for receiving input signals.
 
             As an example, you could run this method as a Thread that monitor the occurance of low-level inputs
-            and apply the following code to translate it to high-level event
+            and apply the following code to translate it to high-level event:
         '''
         hl_event = self.__translation_table[(self.__translation_table['low-level']==ll_event)]['high-level'].array        # Translate event
 

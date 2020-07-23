@@ -1,11 +1,10 @@
-
 from lib.Automaton import MultiAutomata
 from lib.StateMachine import StateMachine, Supervisor
 from MissionManager import MissionManager
 from Intereface import EventInterface
 from lib.ProductSystem import EventsMonitor
 
-machines_counter = 0
+machines_counter = 0            # Count the quantity of machines being executed
 
 #############################################################################
 #### Create and Start Multiple State Machines from one file  #################
@@ -44,7 +43,6 @@ em.start()
 #### Start the Interface ####################################################
 ev = EventInterface()
 ev.start()
-
 
 #############################################################################
 #### Start the Mission Manager  #############################################
