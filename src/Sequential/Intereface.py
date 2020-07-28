@@ -1,8 +1,8 @@
-from threading import Thread
-import PySimpleGUI as sg
-import inspect
 import os
+import inspect
 import pandas as pd
+import PySimpleGUI as sg
+from threading import Thread
 
 from lib.EventReceiver import EventReceiver
 from lib.ProductSystem import g_var
@@ -63,7 +63,7 @@ class EventInterface(Thread):
 
             [sg.Frame('Trace:',[
                 [sg.Text("Id"), sg.Text("Event"),sg.Text("Time")],
-                [sg.Multiline(size=(20,10), key='tracer', disabled=True, autoscroll=True)],
+                [sg.Multiline(size=(30,10), key='tracer', disabled=True, autoscroll=True)],
                 [sg.SaveAs("SAVE", key='save', file_types = (("ALL Files", "*.*"),("CSV text",".csv")), enable_events=True),
                     sg.Button("REFRESH", key='refresh')]
                 ]),

@@ -1,0 +1,13 @@
+// manouvers_gs_dependencies
+digraph {
+	rankdir=LR
+	GS_OFF [label=GS_OFF color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	GS_ON [label=GS_ON color=black fillcolor=white shape=doublecircle style=filled]
+	GS_OFF -> GS_ON [label=on_gs fontcolor=blue]
+	GS_ON -> GS_OFF [label=off_gs fontcolor=blue]
+	GS_ON -> GS_OFF [label=er_gs fontcolor=red style=dashed]
+	GS_ON -> GS_ON [label="st_exp,
+st_vsv,
+rsm_exp,
+rsm_vsv" fontcolor=blue]
+}

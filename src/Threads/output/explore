@@ -1,0 +1,16 @@
+// explore
+digraph {
+	rankdir=LR
+	EXP_ERROR [label=EXP_ERROR color=black fillcolor=white shape=circle style=filled]
+	EXP_EXE [label=EXP_EXE color=black fillcolor=white shape=doublecircle style=filled]
+	EXP_IDLE [label=EXP_IDLE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	EXP_SUSP [label=EXP_SUSP color=black fillcolor=white shape=circle style=filled]
+	EXP_ERROR -> EXP_IDLE [label=rst_exp fontcolor=blue]
+	EXP_EXE -> EXP_ERROR [label=er_exp fontcolor=red style=dashed]
+	EXP_EXE -> EXP_IDLE [label=end_exp fontcolor=red style=dashed]
+	EXP_EXE -> EXP_SUSP [label=sus_exp fontcolor=blue]
+	EXP_IDLE -> EXP_EXE [label=st_exp fontcolor=blue]
+	EXP_SUSP -> EXP_ERROR [label=er_exp fontcolor=red style=dashed]
+	EXP_SUSP -> EXP_EXE [label=rsm_exp fontcolor=blue]
+	EXP_SUSP -> EXP_IDLE [label=abort_exp fontcolor=blue]
+}

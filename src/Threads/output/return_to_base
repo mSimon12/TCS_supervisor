@@ -1,0 +1,16 @@
+// return_to_base
+digraph {
+	rankdir=LR
+	RB_ERROR [label=RB_ERROR color=black fillcolor=white shape=circle style=filled]
+	RB_EXE [label=RB_EXE color=black fillcolor=white shape=doublecircle style=filled]
+	RB_IDLE [label=RB_IDLE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	RB_SUSP [label=RB_SUSP color=black fillcolor=white shape=circle style=filled]
+	RB_ERROR -> RB_IDLE [label=rst_rb fontcolor=blue]
+	RB_EXE -> RB_ERROR [label=er_rb fontcolor=red style=dashed]
+	RB_EXE -> RB_IDLE [label=end_rb fontcolor=red style=dashed]
+	RB_EXE -> RB_SUSP [label=sus_rb fontcolor=blue]
+	RB_IDLE -> RB_EXE [label=st_rb fontcolor=blue]
+	RB_SUSP -> RB_ERROR [label=er_rb fontcolor=red style=dashed]
+	RB_SUSP -> RB_EXE [label=rsm_rb fontcolor=blue]
+	RB_SUSP -> RB_IDLE [label=abort_rb fontcolor=blue]
+}

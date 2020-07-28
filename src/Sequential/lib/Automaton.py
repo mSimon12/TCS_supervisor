@@ -382,7 +382,7 @@ class Automaton(object):
             events_file.write("import pandas as pd\n") 
 
             # Insert importation of EventDispatcher
-            events_file.write("from lib.EventsMonitor import trigger_event\n")    
+            events_file.write("from lib.ProductSystem import trigger_event\n")    
 
             # Insert file description
             events_file.write("\n'''")

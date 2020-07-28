@@ -20,15 +20,18 @@ class MissionManager(Thread):
 
         # Get all events call in the module
         self.__cont_events = {}
+        self.__last_id = -1
         for x in inspect.getmembers(events_module,inspect.isclass):
             if x[1].is_controllable():
                 self.__cont_events[x[0]] = x[1]  
 
     def get_last_update(self):
         g_var.trace_update_flag.acquire()
-        while g_var.events_trace.empty:
+        while (g_var.events_trace.empty) or (self.__last_id == g_var.events_trace.tail(1).index[0]):
+            print("[Mission Manager]: Waiting next update!")
             g_var.trace_update_flag.wait()
         current_status = g_var.events_trace.tail(1)        # Get the last update
+        self.__last_id = current_status.index[0]            # Get id of the last occured event
         g_var.trace_update_flag.release()
 
         return current_status
@@ -36,21 +39,21 @@ class MissionManager(Thread):
     
     def run(self):
         # On this exemple the Mission Manager will only run the following events
-        events_to_execute = ['on_gs', 'st_app', 'on_vs', 'st_app', 'off_vs', 'off_gs']
+        events_to_execute = ['on_gs', 'on_vs', 'st_app', 'off_vs', 'off_gs']
 
         for e in events_to_execute:
             # Get last update in Machines
             current = self.get_last_update()
             if current.index[0] > 0:
                 last_event = current['event'].array[0]
-                print("\nLast event --> ", last_event)
+                print("\n[Mission Manager]: Last event --> ", last_event)
 
             # Print enabled events
             enabled_events = current['enabled_events'].array[0]
-            print("Enabled_events --> ", enabled_events)
+            print("[Mission Manager]: Enabled_events --> ", enabled_events)
 
             # Print current states
-            print("Current states: ")
+            print("[Mission Manager]: Current states: ")
             for s in current['states'].values[0]:
                 print(f"\t{s.upper()}: {current['states'].values[0][s]}")
             print()
@@ -58,6 +61,6 @@ class MissionManager(Thread):
             if e in enabled_events:
                 self.__cont_events[e].call()
             else: 
-                print(f"\nEvent '{e}' is not enabled!")
-            time.sleep(2)
+                print(f"\n[Mission Manager]: Event '{e}' is not enabled!")
+            # time.sleep(2)
            

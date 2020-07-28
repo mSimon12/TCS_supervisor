@@ -1,0 +1,11 @@
+// battery_monitor
+digraph {
+	rankdir=LR
+	BAT_OK [label=BAT_OK color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	CRITICAL [label=CRITICAL color=black fillcolor=white shape=circle style=filled]
+	LOW [label=LOW color=black fillcolor=white shape=circle style=filled]
+	BAT_OK -> LOW [label=bat_L fontcolor=red style=dashed]
+	CRITICAL -> LOW [label=bat_L fontcolor=red style=dashed]
+	LOW -> BAT_OK [label=bat_OK fontcolor=red style=dashed]
+	LOW -> CRITICAL [label=bat_LL fontcolor=red style=dashed]
+}
