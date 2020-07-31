@@ -3,8 +3,8 @@ import inspect
 import pandas as pd
 from threading import Thread, Condition
 
-from lib.ProductSystem import g_var
-import OP.EVENTS as events_module
+from lib.ProductSystem import g_var, trigger_event
+# import OP.EVENTS as events_module
 
 class MissionManager(Thread):
     '''
@@ -18,19 +18,20 @@ class MissionManager(Thread):
     def __init__(self):
         Thread.__init__(self)   
 
+        self.__last_id = -1                                             # Variable to control new events received
+
         # Get all events call in the module
-        self.__cont_events = {}
-        self.__last_id = -1
-        for x in inspect.getmembers(events_module,inspect.isclass):
-            if x[1].is_controllable():
-                self.__cont_events[x[0]] = x[1]  
+        # self.__cont_events = {}
+        # for x in inspect.getmembers(events_module,inspect.isclass):
+        #     if x[1].is_controllable():
+        #         self.__cont_events[x[0]] = x[1]  
 
     def get_last_update(self):
         g_var.trace_update_flag.acquire()
         while (g_var.events_trace.empty) or (self.__last_id == g_var.events_trace.tail(1).index[0]):
             print("[Mission Manager]: Waiting next update!")
             g_var.trace_update_flag.wait()
-        current_status = g_var.events_trace.tail(1)        # Get the last update
+        current_status = g_var.events_trace.tail(1)         # Get the last update
         self.__last_id = current_status.index[0]            # Get id of the last occured event
         g_var.trace_update_flag.release()
 
@@ -58,7 +59,7 @@ class MissionManager(Thread):
             current = self.get_last_update()
             if current.index[0] > 0:
                 last_event = current['event'].array[0]
-                print("\n[Mission Manager]: Last event --> ", last_event)
+                print("\n[Mission Manager]: Last event --> {} (param = {})".format(last_event, current['event_params']))
 
             # Print enabled events
             enabled_events = current['enabled_events'].array[0]
@@ -71,7 +72,7 @@ class MissionManager(Thread):
             print()
 
             if e in enabled_events:
-                self.__cont_events[e].call()
+                trigger_event(e)                                                    # Call the execution of the controllable event
                 print("MM calling!")
             else: 
                 print(f"\n[Mission Manager]: Event '{e}' is not enabled!")

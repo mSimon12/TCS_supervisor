@@ -1,8 +1,7 @@
 import pandas as pd
 import inspect
 
-import OP.EVENTS as events_module
-
+from lib.ProductSystem import trigger_event
 
 class EventReceiver(object):
     '''
@@ -15,11 +14,6 @@ class EventReceiver(object):
     '''
 
     def __init__(self):
-        # Get all events call in the events_module
-        self.__events = {}
-        for x in inspect.getmembers(events_module,inspect.isclass):
-            self.__events[x[0]] = x[1]  
-
         # Get translation table (low-level -> high-level)
         filename = "OP/translation_table.csv"
         self.__translation_table = pd.read_csv(filename)
@@ -34,4 +28,4 @@ class EventReceiver(object):
         hl_event = self.__translation_table[(self.__translation_table['low-level']==ll_event)]['high-level'].array        # Translate event
 
         if hl_event != None:
-            self.__events[hl_event[0]].call(param)             # Call execution of the high-level event
+            trigger_event(hl_event[0], param)                  # Trigger the received event

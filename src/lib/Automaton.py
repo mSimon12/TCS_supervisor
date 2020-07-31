@@ -379,10 +379,7 @@ class Automaton(object):
         # Verify if the file is empty
         if os.stat(filename).st_size == 0:
             # Insert importation of pandas
-            events_file.write("import pandas as pd\n") 
-
-            # Insert importation of EventDispatcher
-            events_file.write("from lib.ProductSystem import trigger_event\n")    
+            events_file.write("import pandas as pd\n")   
 
             # Insert file description
             events_file.write("\n'''")
@@ -424,11 +421,6 @@ class Automaton(object):
                     events_file.write("\n\t__type = 'controllable'")
                 else:
                     events_file.write("\n\t__type = 'uncontrollable'")
-
-                # Insert event call
-                events_file.write("\n\n\t@classmethod")
-                events_file.write("\n\tdef call(cls, param = None):")
-                events_file.write("\n\t\ttrigger_event('" + event + "', " + event + ", param)")
 
                 # Insert event handler
                 events_file.write("\n\n\t@classmethod")

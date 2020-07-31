@@ -14,11 +14,24 @@
 # event = x.pop(0)
 # print(event)
 
-string = "(0.5,5.0)"
+# string = "(0.5,5.0)"
 
-print(string)
-tup = []
+# print(string)
+# tup = []
 
-tup.append(eval(string))
+# tup.append(eval(string))
 
-print(tup[0])
+# print(tup[0])
+
+x = []
+if x:
+    print("Ola")
+else:
+    print("Bazinga")
+
+x = 10
+
+if x:
+    print("Ola")
+else:
+    print("Bazinga")

@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 from threading import Thread
 
 from lib.EventReceiver import EventReceiver
-from lib.ProductSystem import g_var
+from lib.ProductSystem import g_var, trigger_event
 
 import OP.EVENTS as events_module
 import OP.STATES as states_module
@@ -57,8 +57,8 @@ class EventInterface(Thread):
             [sg.Image("output/" + machines[0] + ".png", key="_IMAGE_", background_color="white")],
 
             [sg.Frame('Trace:',[
-                [sg.Text("Id"), sg.Text("Event"),sg.Text("Time")],
-                [sg.Multiline(size=(30,10), key='tracer', disabled=True, autoscroll=True)],
+                [sg.Text("Id"), sg.Text("Event"), sg.Text("Parameters"),sg.Text("Time")],
+                [sg.Multiline(size=(50,10), key='tracer', disabled=True, autoscroll=True)],
                 [sg.SaveAs("SAVE", key='save', file_types = (("ALL Files", "*.*"),("CSV text",".csv")), enable_events=True),
                     sg.Button("REFRESH", key='refresh')]
                 ]),
@@ -109,7 +109,8 @@ class EventInterface(Thread):
                         color = 'blue'
                     else:
                         color = 'red'
-                    self.window['tracer'].print(self.trace.tail(1).drop(columns=['enabled_events','states']).to_string(header=False), text_color=color)
+                    text = self.trace.tail(1).drop(columns=['enabled_events','states']).to_string(header=False, justify='left')
+                    self.window['tracer'].print(text, text_color=color)
 
                 #Update the Automaton Image
                 try:
@@ -137,11 +138,15 @@ class EventInterface(Thread):
             elif event == 'trigger':
                 # An event is triggered
                 if values['controllable'] == True:
-                    self.__events[values['selected_event']].call(self.param)
+                    trigger_event(values['selected_event'], self.param)                             # Call the execution of the controllable event
                 else:
+                    # Trigger uncontrollable events
                     event = values['selected_event']
-                    ll_event = self.translation_table[(self.translation_table['high-level']==event)]['low-level'].array[0]      # translate to low-level
+
+                    # Translate non-controllable events to low-level call
+                    ll_event = self.translation_table[(self.translation_table['high-level']==event)]['low-level'].array[0]
                     self.__receiver.receive_event(ll_event, self.param)
+                
                 self.param = []                                                                     # Clear param
                 self.window['param_list'].Update(values=self.param)                                 # Clear param screen
 
@@ -154,7 +159,8 @@ class EventInterface(Thread):
                             color = 'blue'
                         else:
                             color = 'red'
-                        self.window['tracer'].print(self.trace.loc[[i]].drop(columns=['enabled_events','states']).to_string(header=False), text_color=color)
+                        text = self.trace.loc[[i]].drop(columns=['enabled_events','states']).to_string(header=False, justify='left')
+                        self.window['tracer'].print(text, text_color=color)
             
             elif event == 'save':
                 # Save content of tracer into a csv file
@@ -163,16 +169,21 @@ class EventInterface(Thread):
                     filename += ".csv"
 
                 if '.csv' in filename:
+                    
                     self.trace.drop(columns=['enabled_events','states']).to_csv(filename)
                 else:
                     sg.Popup('Wrong file extension!', title='Saving failure!')
+                print("saving")
 
             elif event == 'add_param':
                 # Add a new item as parameter for the event
-                if values['new_param']:
+                # if values['new_param']:
+                try:
                     self.param.append(eval(values['new_param'])) 
                     self.window['new_param'].update('')
                     self.window['param_list'].Update(values=self.param)
+                except:
+                    pass
 
             elif event == 'remove_param':
                 # Remove an item from the list of parameters
