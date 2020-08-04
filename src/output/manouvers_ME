@@ -1,8 +1,8 @@
 // manouvers_ME
 digraph {
 	rankdir=LR
-	Mi_EXE [label=Mi_EXE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
-	NO_Mi [label=NO_Mi color=black fillcolor=white shape=doublecircle style=filled]
+	Mi_EXE [label=Mi_EXE color=black fillcolor=white shape=doublecircle style=filled]
+	NO_Mi [label=NO_Mi color=blue fillcolor=lightgrey shape=doublecircle style=filled]
 	Mi_EXE -> Mi_EXE [label=move_to fontcolor=blue]
 	Mi_EXE -> NO_Mi [label="sus_app,
 sus_exp,

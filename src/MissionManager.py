@@ -76,5 +76,5 @@ class MissionManager(Thread):
                 print("MM calling!")
             else: 
                 print(f"\n[Mission Manager]: Event '{e}' is not enabled!")
-            time.sleep(2)
+            time.sleep(1)
            

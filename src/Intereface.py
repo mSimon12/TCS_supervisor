@@ -59,10 +59,9 @@ class EventInterface(Thread):
             [sg.Frame('Trace:',[
                 [sg.Text("Id"), sg.Text("Event"), sg.Text("Parameters"),sg.Text("Time")],
                 [sg.Multiline(size=(50,10), key='tracer', disabled=True, autoscroll=True)],
-                [sg.SaveAs("SAVE", key='save', file_types = (("ALL Files", "*.*"),("CSV text",".csv")), enable_events=True),
+                [sg.Input(visible=False, enable_events=True, key='save'), sg.FileSaveAs("SAVE", file_types = (("ALL Files", "*.*"),("CSV text",".csv")), target='save', enable_events=True), 
                     sg.Button("REFRESH", key='refresh')]
                 ]),
-            
             sg.Frame('Trigger event',[
                 [sg.Column([
                     [sg.Radio('Controllable','event_type', default=False, key='controllable',enable_events=True)], 
@@ -111,7 +110,6 @@ class EventInterface(Thread):
                         color = 'red'
                     text = self.trace.tail(1).drop(columns=['enabled_events','states']).to_string(header=False, justify='left')
                     self.window['tracer'].print(text, text_color=color)
-
                 #Update the Automaton Image
                 try:
                     self.window.Element("_IMAGE_").update(filename="output/" + values['option'] + ".png")
@@ -165,15 +163,17 @@ class EventInterface(Thread):
             elif event == 'save':
                 # Save content of tracer into a csv file
                 filename = values['save']
-                if '.' not in filename:
-                    filename += ".csv"
+                if filename:
+                    if '.' not in filename:
+                        filename += ".csv"
 
-                if '.csv' in filename:
-                    
-                    self.trace.drop(columns=['enabled_events','states']).to_csv(filename)
-                else:
-                    sg.Popup('Wrong file extension!', title='Saving failure!')
-                print("saving")
+                    if '.csv' in filename:
+                        
+                        self.trace.drop(columns=['enabled_events','states']).to_csv(filename)
+                    else:
+                        sg.Popup('Wrong file extension!', title='Saving failure!')
+                    self.window['save'].update(value='')
+                
 
             elif event == 'add_param':
                 # Add a new item as parameter for the event
@@ -190,7 +190,7 @@ class EventInterface(Thread):
                 item = self.window['param_list'].GetIndexes()[0]
                 self.param.pop(item)
                 self.window['param_list'].Update(values=self.param)
-                
+
         self.window.Close()
 
 

@@ -2,8 +2,8 @@
 digraph {
 	rankdir=LR
 	AP_ERROR [label=AP_ERROR color=black fillcolor=white shape=circle style=filled]
-	AP_EXE [label=AP_EXE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
-	AP_IDLE [label=AP_IDLE color=black fillcolor=white shape=doublecircle style=filled]
+	AP_EXE [label=AP_EXE color=black fillcolor=white shape=doublecircle style=filled]
+	AP_IDLE [label=AP_IDLE color=blue fillcolor=lightgrey shape=doublecircle style=filled]
 	AP_SUSP [label=AP_SUSP color=black fillcolor=white shape=circle style=filled]
 	AP_ERROR -> AP_IDLE [label=rst_app fontcolor=blue]
 	AP_EXE -> AP_ERROR [label=er_app fontcolor=red style=dashed]
