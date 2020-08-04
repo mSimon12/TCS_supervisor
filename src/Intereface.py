@@ -217,3 +217,4 @@ class EventInterface(Thread):
                 self.window['selected_event'].update(values = self.enabled_e)
 
             g_var.trace_update_flag.release()                   # Release mutex
+            
