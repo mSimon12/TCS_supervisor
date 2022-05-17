@@ -2,8 +2,8 @@
 digraph {
 	rankdir=LR
 	VS_ERROR [label=VS_ERROR color=black fillcolor=white shape=circle style=filled]
-	VS_OFF [label=VS_OFF color=black fillcolor=white shape=doublecircle style=filled]
-	VS_ON [label=VS_ON color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	VS_OFF [label=VS_OFF color=blue fillcolor=lightgrey shape=doublecircle style=filled]
+	VS_ON [label=VS_ON color=black fillcolor=white shape=doublecircle style=filled]
 	VS_ERROR -> VS_OFF [label=rst_vs fontcolor=blue]
 	VS_OFF -> VS_ON [label=on_vs fontcolor=blue]
 	VS_ON -> VS_ERROR [label=er_vs fontcolor=red style=dashed]
