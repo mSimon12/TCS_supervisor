@@ -10,6 +10,16 @@ Supremica allows to export only one or multiple models into a file, to do it:
 
 - Remember to export Supervisors and Plant into different xml files.
 
+### Getting Started
+Assuming that python is already installed, install the required packages by the requirements file:
+```
+pip install -r requirements.txt
+```
+Generation of automaton images require installing Graphviz in yout OS, for Ubuntu run:
+```
+sudo apt-get install graphviz
+```
+
 ### Building handlers
 After exporting the xml files, it is already possible to create the handlers responsible for the translation from high-level events
 to low-level commands. 

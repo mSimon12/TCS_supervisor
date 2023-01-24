@@ -1,37 +1,25 @@
+from lib.Automaton import Automaton, MultiAutomata
 
-# x = []
+################################################################
+# Example for a file with only one Automaton
+G1 = Automaton('Test_Automaton')
 
-# x.append(['bat_L', 'caller','param'])
-# x.append(['bat_OK', 'caller','param'])
-# x.append(['bat_LL', 'caller','param'])
+G1.insert_state("N1", idt=0, initial=True)
+G1.insert_state("N2", idt=1)
+G1.insert_state("N3", idt=2)
 
-# event = x.pop(0)
-# print(event)
+G1.insert_event("e1", idt=0)
+G1.insert_event("e2", idt=1)
 
-# event = x.pop(0)
-# print(event)
+G1.insert_transition("N1","N2","e1")
+G1.insert_transition("N2","N3","e1")
+G1.insert_transition("N3","N1","e1")
+G1.insert_transition("N1","N3","e2")
+G1.insert_transition("N3","N2","e2")
+G1.insert_transition("N2","N1","e2")
 
-# event = x.pop(0)
-# print(event)
+G1.show_states()
+G1.show_events()
+G1.show_transitions()
 
-# string = "(0.5,5.0)"
-
-# print(string)
-# tup = []
-
-# tup.append(eval(string))
-
-# print(tup[0])
-
-x = []
-if x:
-    print("Ola")
-else:
-    print("Bazinga")
-
-x = 10
-
-if x:
-    print("Ola")
-else:
-    print("Bazinga")
+G1.export_automaton()

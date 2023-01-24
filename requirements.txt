@@ -1,4 +1,6 @@
 graphviz
-untangle
-pysimplegui
+numpy
 pandas
+pysimplegui
+tabulate
+untangle

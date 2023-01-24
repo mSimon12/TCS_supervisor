@@ -18,3 +18,6 @@
 *.zip
 *.tar.gz
 *.rar
+
+# Outputs folder
+output/

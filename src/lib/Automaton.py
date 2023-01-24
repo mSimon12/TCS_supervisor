@@ -1,4 +1,3 @@
-
 import os
 import errno
 
@@ -122,7 +121,7 @@ class Automaton(object):
     def read_xml(self, file, auto_name = None):
         '''
             Create the automaton from a xml file configured as Supremica output
-            file = the name of the XML file ontaining one or multiple Automata
+            file = the name of the XML file containing one or multiple Automata
             aut_name = Name of the desired automaton into a file with multiple Automata  
         '''
         if auto_name == None:
@@ -228,21 +227,19 @@ class Automaton(object):
         print("\nSTATES:")
         print(pdtabulate(self.__states))
         print("\nAlphabet = ",self.__alphabet)
-        
-    
-    def insert_state(self, node_name, idt, initial=False, accepting=True):
+            
+    def insert_state(self, node_name, idt, initial=False, accepting=False):
         '''
             Insert new node into the Supervisor automaton:
                 node_name: UPPER_CASE name
         '''
-        # if not node_name.isupper():
-        #     print("Incorrect node name. It must be upper_case!")
-        # else:
-        if node_name not in self.__states.index:
-            self.__states.loc[node_name] = [idt, initial, accepting]
+        if not node_name.isupper():
+            print("Incorrect node name. It must be upper_case!")
         else:
-            print("There is already a node called \'", node_name,"\'")
-
+            if node_name not in self.__states.index:
+                self.__states.loc[node_name] = [idt, initial, accepting]
+            else:
+                print("There is already a node called \'", node_name,"\'")
 
     def remove_state(self, node_name):
         '''
@@ -284,23 +281,21 @@ class Automaton(object):
         print(pdtabulate(self.__events))
         print("\nAlphabet = ",self.__alphabet)
 
-
     def insert_event(self, event_name, idt, controllable=True):
         '''
             Insert new event type into the Automaton:
                 event_name: LOWER_CASE name
         '''
 
-        # if event_name.isupper():
-        #     print("Incorrect event name. It must be lower_case!")
-        # else:
-        if event_name not in self.__events:
-            self.__events.loc[event_name] = [idt, controllable, 0]          #Add a new event with counter of transitions = 0
-
-            self.__alphabet.add(event_name)                                 #Add the new event to the alphabet
+        if event_name.isupper():
+            print("Incorrect event name. It must be lower_case!")
         else:
-            print("There is already a event called \'",event_name,"\'")
+            if event_name not in self.__events:
+                self.__events.loc[event_name] = [idt, controllable, 0]          #Add a new event with counter of transitions = 0
 
+                self.__alphabet.add(event_name)                                 #Add the new event to the alphabet
+            else:
+                print("There is already a event called \'",event_name,"\'")
 
     def remove_event(self, event_name):
         '''
@@ -319,7 +314,6 @@ class Automaton(object):
         print(pdtabulate(self.__transitions))
         print("\nAlphabet = ",self.__alphabet)
 
-
     def insert_transition(self, st_node, end_node, event):
         '''
             Insert a new transition:
@@ -327,27 +321,28 @@ class Automaton(object):
                 end_node: destiny node from transition;
                 event: event that trigger the transition.
         '''
-        # Verifye event existance
+        # Verify event existence
         if event in self.__events.index:
-            # Verifye states existance
+            # Verify states existence
             if st_node in self.__states.index and end_node in self.__states.index:
-                # Verifye transition existance
+                # Verify transition existence
                 if self.__transitions[(self.__transitions['st_node'] == st_node) & (self.__transitions['event'] == event)].empty:
-                    self.__transitions = self.__transitions.append({'st_node':st_node, 'end_node':end_node, 'event':event}, ignore_index=True)
+                    self.__transitions = pd.concat([self.__transitions, 
+                                                    pd.DataFrame.from_records([{'st_node':st_node, 'end_node':end_node, 'event':event}])],
+                                                    ignore_index=True)
                     self.__events.loc[event,'transitions'] += 1
                 else:
                     print("Transition already exist!")
             else:
                 print("Some state have not been created!")
         else:
-            print("Event ", event, "does not exist!")
-
+            print("Event", event, "does not exist!")
 
     def remove_transition(self, st_node, event):
         '''
             Remove a transition from in_node:
         '''
-        # verify in_node existence 
+        # verify st_node existence 
         if st_node in self.__states.index:
             # verify transition existence 
             if self.__transitions[(self.__transitions['st_node'] == st_node) & (self.__transitions['event'] == event)].empty:
